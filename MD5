@@ -1,4 +1,4 @@
-9cd0cac4e97c5478470447810815d344 *DESCRIPTION
+facf8429e0bb00ce37261a27cf4cc75a *DESCRIPTION
 cab266c7a0ce2f0f2fd1a2849f9c8c82 *NAMESPACE
 6f3ef7162e8bb01155f372d2882a925d *R/Blocks.R
 a4870928908f5141f86af7ac811f2936 *R/Within.R
@@ -19,17 +19,15 @@ df44a3b58a993ff94f2b0826cacfab7d *R/permute.R
 a1a326e5df33a1ad21f4a602a59d1b99 *R/print.permControl.R
 348b6e9694e51fa5884cf3ef83d138bd *R/print.summary.allPerms.R
 eb6d20a84325371ed25f56333a1286f0 *R/print.summary.permCheck.R
-efa3e7cbb55178c5d329b4ea0bce5125 *R/shuffle-utils.R
+126c8b7ba3ee0d4cf0d3f8ce4c361b32 *R/shuffle-utils.R
 be73da79acc3fc326e7c01e303019b4c *R/shuffle.R
 e657e8a6caf2419cdd9ef97405f82dc4 *R/shuffleSet.R
 6c98b1afeb08eef934cc6d25557c8812 *R/summary.allPerms.R
 1452820ef3677a4cc68fc27837f67ee3 *R/summary.permCheck.R
 4d966dbdda958c863064462aeb589708 *data/jackal.rda
-a1e0c68d5ba724f4e9ba3427f153a3e0 *inst/ChangeLog
-42f8a654a53515271920f03727a8d3ab *inst/doc/Z.cls
+e848d2c0bedae8f69c1f5a56ec5e3186 *inst/ChangeLog
 68d2089163c81a93115bbc8992e31236 *inst/doc/permutations.Rnw
-556c7d79efb8a741bc4986917c966e70 *inst/doc/permutations.pdf
-d674f05f818bc80790ef5c49c174ed71 *inst/doc/permute.bib
+8768b47b587b442c9a83a52437311ea2 *inst/doc/permutations.pdf
 b87f99cdfacc9f1f1715dbbc87db157b *inst/tests/test-shuffle.R
 18ed0d9a096fe30868c57c62aa46bee1 *man/allPerms.Rd
 20283d85a6edef61c4f5d055c50e315b *man/allUtilis.Rd
@@ -41,3 +39,6 @@ e54c2a3be916e7fa0813b0a5f93f6dc3 *man/nobs.Rd
 fecb66eec3413646c13d87753c492aa7 *man/shuffle.Rd
 2c38f1230457b333584d85b0ef598bdc *man/shuffleSet.Rd
 8f3e383676a96e96a4f5e56e93c6e131 *tests/test-all.R
+42f8a654a53515271920f03727a8d3ab *vignettes/Z.cls
+68d2089163c81a93115bbc8992e31236 *vignettes/permutations.Rnw
+d674f05f818bc80790ef5c49c174ed71 *vignettes/permute.bib

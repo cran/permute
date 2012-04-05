@@ -1,16 +1,13 @@
-$Date: 2011-10-31 16:26:24 +0000 (Mon, 31 Oct 2011) $
+$Date: 2012-04-04 21:14:12 +0100 (Wed, 04 Apr 2012) $
 
 permute ChangeLog
 
-Version 0.6-3 (opened 31 October, 2011)
-
-	* shuffleStrata: assumed that the samples were in contiguous
-	blocks. Reported by Cajo ter Braak
-
-Version 0.6-2 (closed 31 October, 2011)
+Version 0.7-0
 
 	* Vignette: silly typo is example code illustrating shuffle().
 	New section on `shuffleSet()`.
+
+	The Vignette is now in `vignettes` not `inst/doc`.
 
 	* check.Rd: undo the hack needed to pass checks prior to
 	vegan 2.0 being on CRAN.
@@ -19,6 +16,14 @@ Version 0.6-2 (closed 31 October, 2011)
 
 	* shuffleGrid: was doing random flipping of permutations even
 	if `mirror = FALSE` for the `constant = TRUE` case.
+
+	* shuffleStrata: assumed that the samples were in contiguous
+	blocks. Reported by Cajo ter Braak.
+
+	* .Internal: removed all instances of .Internal calls in the
+	code.
+
+	* Package is now byte-compiled.
 
 Version 0.6-1 (released to CRAN on September 7, 2011)
 
