@@ -1,6 +1,6 @@
 ## This is totally wrong and needs updating to match the new
 ## code in permute...
-`permuplot` <- function(n, control = permControl(),
+`permuplot` <- function(n, control = how(),
                         col = par("col"),
                         hcol = "red",
                         shade = "lightgrey",
@@ -10,6 +10,10 @@
                         ann = par("ann"),
                         cex = par("cex"),
                         ...) {
+    ## This should just bail with an message
+    message("permuplot does not work with the new permutation designs.\nNo plot will be generated!")
+    invisible()
+
     xy.series <- function(n) {
         angle <- seq(0, 2*pi, length = n+1)[-(n+1)]
         x <- rev(cos(angle))

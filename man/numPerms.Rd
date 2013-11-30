@@ -7,13 +7,13 @@
   under the current permutation scheme.
 }
 \usage{
-numPerms(object, control = permControl())
+numPerms(object, control = how())
 }
 \arguments{
   \item{object}{any object handled by \code{\link{nobs}}.}
   \item{control}{a list of control values describing properties of the
     permutation design, as returned by a call to
-    \code{\link{permControl}}.}
+    \code{\link{how}}.}
 }
 \details{
   Function \code{numPerms} returns the number of permutations for the
@@ -27,7 +27,7 @@ numPerms(object, control = permControl())
   not just the object containing the observations. 
 }
 \value{
-  The (numeric) number of possible permutaytions of observations in
+  The (numeric) number of possible permutations of observations in
   \code{object}.
 }
 \note{
@@ -61,27 +61,36 @@ numPerms(object, control = permControl())
 }
 \author{Gavin Simpson}
 \seealso{\code{\link{shuffle}} and
-  \code{\link{permControl}}. Additional \code{\link{nobs}} methods are
+  \code{\link{how}}. Additional \code{\link{nobs}} methods are
   provide, see \code{\link{nobs-methods}}.}
 \examples{
-## permutation design --- see ?permControl
-ctrl <- permControl() ## defaults to freely exchangeable
+## permutation design --- see ?how
+ctrl <- how() ## defaults to freely exchangeable
 
-## vector
+## vector input
 v <- 1:10
 (obs <- nobs(v))
 numPerms(v, control = ctrl)
 
-## integer
+## integer input
 len <- length(v)
 (obs <- nobs(len))
 numPerms(len, control = ctrl)
 
 ## new design, objects are a time series
-ctrl <- permControl(within = Within(type = "series"))
+ctrl <- how(within = Within(type = "series"))
 numPerms(v, control = ctrl)
 ## number of permutations possible drastically reduced...
-## turn on mirroring
-ctrl <- permControl(within = Within(type = "series", mirror = TRUE))
+## ...turn on mirroring
+ctrl <- how(within = Within(type = "series", mirror = TRUE))
 numPerms(v, control = ctrl)
+
+## Try blocking --- 2 groups of 5
+bl <- numPerms(v, control = how(blocks = gl(2,5)))
+bl
+
+## should be same as
+pl <- numPerms(v, control = how(plots = Plots(strata = gl(2,5))))
+pl
+stopifnot(all.equal(bl, pl))
 }
