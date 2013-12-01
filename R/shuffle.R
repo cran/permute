@@ -1,16 +1,10 @@
-`shuffle` <- function (n, control = permControl()) {
-    ## If no strata then permute all samples using stated scheme
-    if(is.null(control$strata)) {
-        out <-
-            switch(control$within$type,
-                   "free" = shuffleFree(n, n),
-                   "series" = shuffleSeries(seq_len(n),
-                   mirror = control$within$mirror),
-                   "grid" = shuffleGrid(nrow = control$within$nrow,
-                   ncol = control$within$ncol,
-                   mirror = control$within$mirror),
-                   "none" = seq_len(n)
-                   )
+`shuffle2` <- function (n, control = how()) {
+    ## capture strata data
+    Pstrata <- getStrata(control, which = "plots")
+    Bstrata <- getStrata(control, which = "blocks")
+    ## if no strata at all permute all samples using stated scheme
+    if(is.null(Pstrata) && is.null(Bstrata)) {
+        out <- shuffleNoStrata(n, control)
     } else {
         ## If strata present, either permute samples, strata or both
 

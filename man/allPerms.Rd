@@ -10,8 +10,7 @@
   permutations for a given R object and a specified permutation design.
 }
 \usage{
-allPerms(n, control = permControl(), max = 9999,
-         observed = FALSE)
+allPerms(n, control = how(), check = TRUE)
 
 \method{summary}{allPerms}(object, \dots)
 }
@@ -20,12 +19,10 @@ allPerms(n, control = permControl(), max = 9999,
     number of observations can be determined via \code{getNumObs}.}
   \item{control}{a list of control values describing properties of the
     permutation design, as returned by a call to
-    \code{\link{permControl}}.}
-  \item{max}{the maximum number of permutations, below which complete
-    enumeration will be attempted. See Details.}
-  \item{observed}{logical, should the observed ordering of samples be
-    returned as part of the complete enumeration? Default is
-    \code{FALSE} to facilitate usage in higher level functions.}
+    \code{\link{how}}.}
+  \item{check}{logical; should \code{allPerms} check the design? The
+    default is to check, but this can be skipped, for example if a
+    function checked the design earlier.}
   \item{object}{an object of class \code{"allPerms"}.}
   \item{\dots}{arguments to other methods.}
 }
@@ -45,7 +42,7 @@ allPerms(n, control = permControl(), max = 9999,
   possible permutations would also become problematic in such cases. To
   control this and guard against trying to evaluate too large a number
   of permutations, if the number of possible permutations is larger than
-  \code{max}, \code{allPerms} exits with an error.
+  \code{getMaxperm(control)}, \code{allPerms} exits with an error.
 }
 \value{
   For \code{allPerms}, and object of class \code{"allPerms"}, a matrix
@@ -57,10 +54,6 @@ allPerms(n, control = permControl(), max = 9999,
   \code{observed} contains argument \code{observed}.
 }
 \section{Warning}{
-  This function currently assumes that any strata are represented by
-  contiguous blocks in the order of the levels of \code{strata}. This is
-  unlike \code{\link{shuffle}} and \code{\link{shuffleSet}}.
-
   If permuting the strata themselves, a balanced design is required (the
   same number of observations in each level of \code{strata}. This is
   common to all functions in the package.
@@ -74,28 +67,23 @@ allPerms(vec) ## free permutation
 ## enumerate all possible permutations for a more complicated
 ## design
 fac <- gl(2,6)
-##ctrl <- permControl(type = "grid", mirror = FALSE, strata = fac,
-##                    constant = TRUE, nrow = 3, ncol = 2)
-ctrl <- permControl(strata = fac,
-                    within = Within(type = "grid", mirror = FALSE,
-                                    constant = TRUE, nrow = 3, ncol = 2))
+ctrl <- how(within = Within(type = "grid", mirror = FALSE,
+                            constant = TRUE, nrow = 3, ncol = 2),
+            plots = Plots(strata = fac))
 Nobs <- length(fac)
-numPerms(seq_len(Nobs), control = ctrl)
-(tmp <- allPerms(Nobs, control = ctrl, observed = TRUE))
+numPerms(seq_len(Nobs), control = ctrl) ## 6
+(tmp <- allPerms(Nobs, control = update(ctrl, observed = TRUE)))
 (tmp2 <- allPerms(Nobs, control = ctrl))
 
 ## turn on mirroring
-ctrl$within$mirror <- TRUE
+##ctrl$within$mirror <- TRUE
+ctrl <- update(ctrl, within = update(getWithin(ctrl), mirror = TRUE))
 numPerms(seq_len(Nobs), control = ctrl)
-(tmp3 <- allPerms(Nobs, control = ctrl, observed = TRUE))
+(tmp3 <- allPerms(Nobs, control = update(ctrl, observed = TRUE)))
 (tmp4 <- allPerms(Nobs, control = ctrl))
 
-%\dontrun{
 ## prints out details of the permutation scheme as
 ## well as the matrix of permutations
-% FIXME: uncomment the two lines below when we remove old permute
-% code from vegan and have vegan depend on permute
 summary(tmp3)
 summary(tmp4)
-%}
 }
