@@ -70,7 +70,7 @@
     if(!(observed <- getObserved(control))) {
         obs.v <- seq_len(n)
         obs.row <- apply(out, 1, function(x, obs.v) all(x == obs.v), obs.v)
-        out <- out[!obs.row, ]
+        out <- out[!obs.row, , drop = FALSE]
         ## reduce the number of permutations to get rid of the
         ## observed ordering
         setNperm(control) <- getNperm(control) - 1
@@ -187,7 +187,7 @@
             ## permuting blocks AND within blocks
             ## need a local CONTROL that just permutes blocks
             controlP <- how(plots = Plots(strata = strataP, type = typeP),
-                                    within = Within(type = "none"))
+                            within = Within(type = "none", constant = constantW))
             ## FIXME - the above should really only need to update
             ## within as shown, not fiddle with Plots
 
@@ -199,11 +199,11 @@
             ## permP times - results is a list
             resP <- rep(list(res), permP)
             resP <- lapply(seq_along(resP),
-                            function(i, wi, bl) {
-                                t(apply(wi[[i]], 1,
-                                        function(x, bl, i) {
-                                            x[bl[i,]]
-                                        }, bl = bl, i = i))
+                            function(k, wi, bl) {
+                                t(apply(wi[[k]], 1,
+                                        function(x, bl, kk) {
+                                            x[bl[kk,]]
+                                        }, bl = bl, kk = k))
                             },
                             wi = resP, bl = shuffP)
             res <- do.call(rbind, resP)

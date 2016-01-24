@@ -40,3 +40,46 @@ test_that("shuffleSet returns a matrix even for nset == 1", {
     ss <- shuffleSet(25, nset = 1, control = h)
     expect_that(ss, is_a("matrix"))
 })
+
+test_that("shuffle can permute both plots and within in presence of blocks", {
+    ## Example from @LindsayVass on github #9
+    control <- how(within = Within(type = "free"),
+                   plots = Plots(strata = rep(gl(2,7),2), type = "free"),
+                   blocks = gl(2, 14))
+    permSet <- shuffleSet(28, 100, control = control)
+    expect_that(nrow(permSet), is_identical_to(100L))
+    expect_that(ncol(permSet), is_identical_to(28L))
+    expect_that(permSet, is_a("permutationMatrix"))
+    expect_that(permSet, is_a("matrix"))
+})
+
+test_that("print method for permutationMatrix works", {
+    h <- how()
+    perms <- shuffleSet(10, nset = 10, control = h)
+    expect_output(print(perms), regexp = "No. of Permutations:")
+
+    h <- how(blocks = gl(5,10))
+    perms <- shuffleSet(50, nset = 20, control = h)
+    expect_output(print(perms), regexp = "Restricted by Blocks:")
+    expect_output(print(perms), regexp = "blocks;")
+
+    h <- how(plots = Plots(strata = gl(5,10)))
+    perms <- shuffleSet(50, nset = 20, control = h)
+    expect_output(print(perms), regexp = "Restricted by Plots:")
+    expect_output(print(perms), regexp = "plots;")
+
+    h <- how(plots = Plots(strata = gl(10,10)),
+             blocks = gl(2, 50))
+    perms <- shuffleSet(100, nset = 20, control = h)
+    expect_output(print(perms), regexp = "Restricted by Plots:")
+    expect_output(print(perms), regexp = "plots & blocks;")
+
+    h <- how(within = Within(type = "series", mirror = TRUE))
+    perms <- shuffleSet(10, nset = 20, control = h)
+    expect_output(print(perms), regexp = "; mirrored")
+
+    h <- how(within = Within(type = "series", constant = TRUE),
+             plots = Plots(strata = gl(2, 5), type = "series", mirror = TRUE))
+    perms <- shuffleSet(10, nset = 20, control = h)
+    expect_output(print(perms), regexp = "; same permutation")
+})

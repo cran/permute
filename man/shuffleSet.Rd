@@ -1,5 +1,6 @@
 \name{shuffleSet}
 \alias{shuffleSet}
+\alias{as.matrix.permutationMatrix}
 
 \title{
   Generate a set of permutations from the specified design.
@@ -11,7 +12,9 @@
   set of permutations.
 }
 \usage{
-shuffleSet(n, nset, control = how(), check = TRUE)
+shuffleSet(n, nset, control = how(), check = TRUE, quietly = FALSE)
+
+\method{as.matrix}{permutationMatrix}(x, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -32,6 +35,17 @@ shuffleSet(n, nset, control = how(), check = TRUE)
     function \code{\link{check}}? The default is to check the design for
     the stated number of observations and update \code{control}
     accordingly. See Details.
+  }
+  \item{quietly}{
+    logical; should messages by suppressed?
+  }
+  \item{x}{
+    an object of class \code{"permutationMatrix"}, as returned by
+    \code{shuffleSet}.
+  }
+  \item{\dots}{
+    arguments passed to other methods. For the \code{as.matrix} method
+    only.
   }
 }
 \details{
@@ -61,6 +75,10 @@ shuffleSet(n, nset, control = how(), check = TRUE)
   of permutations returned will be unique, especially so for designs and
   data sets where there are few possible permutations relative to the
   number requested.
+
+  The \code{as.matrix} method sets the \code{control} and \code{seed}
+  attributes to \code{NULL} and removes the \code{"permutationMatrix"}
+  class, resulting in a standard matrix object.
 }
 \value{
   Returns a matrix of permutations, where each row is a separate

@@ -10,10 +10,6 @@
     stop("No default method for 'getBlocks()'")
 }
 
-`getBlocks.permControl` <- function(object, ...) {
-    object$blocks
-}
-
 `getBlocks.how` <- function(object, ...) {
     object$blocks
 }
@@ -25,10 +21,6 @@
 
 `getPlots.default` <- function(object, ...) {
     stop("No default method for 'getPlots()'")
-}
-
-`getPlots.permControl` <- function(object, ...) {
-    object$plots
 }
 
 `getPlots.how` <- function(object, ...) {
@@ -44,10 +36,6 @@
     stop("No default method for 'getWithin()'")
 }
 
-`getWithin.permControl` <- function(object, ...) {
-    object$within
-}
-
 `getWithin.how` <- function(object, ...) {
     object$within
 }
@@ -59,20 +47,6 @@
 
 `getStrata.default` <- function(object, ...) {
     stop("No default method for 'getStrata()'")
-}
-
-`getStrata.permControl` <- function(object,
-                                  which = c("plots", "blocks"),
-                                  drop = TRUE, ...) {
-    which <- match.arg(which)
-    if(isTRUE(all.equal(which, "plots")))
-        strata <- object$plots$strata
-    else if(isTRUE(all.equal(which, "blocks")))
-        strata <- object$blocks
-        stop("Ambiguous `which`")
-    if(isTRUE(drop) && !is.null(strata))
-        strata <- droplevels(strata)
-    strata
 }
 
 `getStrata.how` <- function(object,
@@ -106,18 +80,6 @@
     stop("No default method for 'getType()'")
 }
 
-`getType.permControl` <- function(object,
-                                  which = c("plots","within"), ...) {
-    which <- match.arg(which)
-  if(isTRUE(all.equal(which, "plots")))
-      type <- getPlots(object)$type
-  else if(isTRUE(all.equal(which, "within")))
-      type <- getWithin(object)$type
-  else
-      stop("Ambiguous `which`")
-  type
-}
-
 `getType.how` <- function(object,
                           which = c("plots","within"), ...) {
     which <- match.arg(which)
@@ -131,11 +93,11 @@
 }
 
 `getType.Within` <- function(object, ...) {
-    object$within$type
+    object$type
 }
 
 `getType.Plots` <- function(object, ...) {
-    object$plots$type
+    object$type
 }
 
 ## suppose we can also have setBlocks() etc...
@@ -148,18 +110,6 @@
 
 `getMirror.default` <- function(object, ...) {
     stop("No default method for 'getMirror()'")
-}
-
-`getMirror.permControl` <- function(object,
-                                    which = c("plots","within"), ...) {
-    which <- match.arg(which)
-    if(isTRUE(all.equal(which, "plots")))
-        mirror <- getPlots(object)$mirror
-    else if(isTRUE(all.equal(which, "within")))
-        mirror <- getWithin(object)$mirror
-    else
-        stop("Ambiguous `which`")
-    mirror
 }
 
 `getMirror.how` <- function(object,
@@ -175,11 +125,11 @@
 }
 
 `getMirror.Within` <- function(object, ...) {
-    object$within$mirror
+    object$mirror
 }
 
 `getMirror.Plots` <- function(object, ...) {
-    object$plots$mirror
+    object$mirror
 }
 
 ## Get constant status - i.e. same permutation in each Plot
@@ -191,16 +141,12 @@
     stop("No default method for 'getConstant()'")
 }
 
-`getConstant.permControl` <- function(object, ...) {
-    getWithin(object)$constant
-}
-
 `getConstant.how` <- function(object, ...) {
     getWithin(object)$constant
 }
 
 `getConstant.Within` <- function(object, ...) {
-    object$within$constant
+    object$constant
 }
 
 ## Get the number of rows and colums from grid designs
@@ -210,18 +156,6 @@
 
 `getRow.default` <- function(object, ...) {
     NROW(object)
-}
-
-`getRow.permControl` <- function(object, which = c("plots","within"),
-                                 ...) {
-    which <- match.arg(which)
-    if(isTRUE(all.equal(which, "plots")))
-        nrow <- getPlots(object)$nrow
-    else if(isTRUE(all.equal(which, "within")))
-        nrow <- getWithin(object)$nrow
-    else
-        stop("Ambiguous `which`")
-    nrow
 }
 
 `getRow.how` <- function(object, which = c("plots","within"),
@@ -237,11 +171,11 @@
 }
 
 `getRow.Within` <- function(object, ...) {
-    object$within$nrow
+    object$nrow
 }
 
 `getRow.Plots` <- function(object, ...) {
-    object$plots$nrow
+    object$nrow
 }
 
 `getCol` <- function(object, ...) {
@@ -250,18 +184,6 @@
 
 `getCol.default` <- function(object, ...) {
     NCOL(object)
-}
-
-`getCol.permControl` <- function(object, which = c("plots","within"),
-                                 ...) {
-    which <- match.arg(which)
-    if(isTRUE(all.equal(which, "plots")))
-        ncol <- getPlots(object)$ncol
-    else if(isTRUE(all.equal(which, "within")))
-        ncol <- getWithin(object)$ncol
-    else
-        stop("Ambiguous `which`")
-    ncol
 }
 
 `getCol.how` <- function(object, which = c("plots","within"),
@@ -277,11 +199,11 @@
 }
 
 `getCol.Within` <- function(object, ...) {
-    object$within$ncol
+    object$ncol
 }
 
 `getCol.Plots` <- function(object, ...) {
-    object$plots$ncol
+    object$ncol
 }
 
 `getDim` <- function(object, ...) {
@@ -290,23 +212,6 @@
 
 `getDim.default` <- function(object, ...) {
     dim(object)
-}
-
-`getDim.permControl` <- function(object, which = c("plots","within"),
-                                 ...) {
-    which <- match.arg(which)
-    if(isTRUE(all.equal(which, "plots"))) {
-        PL <- getPlots(object)
-        nc <- PL$ncol
-        nr <- PL$nrow
-    } else if(isTRUE(all.equal(which, "within"))) {
-        WI <- getWithin(object)
-        nc <- WI$ncol
-        nr <- WI$nrow
-    } else {
-        stop("Ambiguous `which`")
-    }
-    c(nr, nc)
 }
 
 `getDim.how` <- function(object, which = c("plots","within"),
@@ -343,10 +248,6 @@
     stop("No default method for `getNperm`")
 }
 
-`getNperm.permControl` <- function(object, ...) {
-    object$nperm
-}
-
 `getNperm.how` <- function(object, ...) {
     object$nperm
 }
@@ -358,10 +259,6 @@
 
 `getMaxperm.default` <- function(object, ...) {
     stop("No default method for `getMaxperm`")
-}
-
-`getMaxperm.permControl` <- function(object, ...) {
-    object$maxperm
 }
 
 `getMaxperm.how` <- function(object, ...) {
@@ -377,10 +274,6 @@
     stop("No default method for `getMinperm`")
 }
 
-`getMinperm.permControl` <- function(object, ...) {
-    object$minperm
-}
-
 `getMinperm.how` <- function(object, ...) {
     object$minperm
 }
@@ -392,10 +285,6 @@
 
 `getComplete.default` <- function(object, ...) {
     stop("No default method for `getComplete`")
-}
-
-`getComplete.permControl` <- function(object, ...) {
-    object$complete
 }
 
 `getComplete.how` <- function(object, ...) {

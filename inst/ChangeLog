@@ -1,5 +1,42 @@
 permute ChangeLog
 
+Version 0.9-0
+
+	* Release to CRAN 23 Jan 2016
+
+Version 0.8-5
+
+	* shuffleSet gains new argument `quietly = FALSE`, which is
+	passed on to `check()` to allow control over printing of
+	statements during checking.
+
+	Reported by: (and fixed by) Jari Oksanen
+
+	* allPerms would return a vector instead of a matrix when a
+	single permutation was generated.
+
+	Reported by: (and fixed by) Jari Oksanen
+
+	* Better defaults for `check()` heuristics allow for more
+	reliable (i.e. fewer duplicate permutations) permutations when
+	the set of permutations is small.
+
+	Provided by: Jari Oksanen
+
+	* allStrata did not handle cases where strata were not in
+	contiguous blocks:
+	e.g. `c(1, 2, 3, 1, 2, 3)` vs `c(1, 1, 2, 2, 3, 3)`
+
+	Reported by: David Warton
+
+	* Permutation matrices returned by `shuffleSet()` now print the
+	permutations more compactfully.
+
+	* as.matrix.allPerms: new S3 method for class `allPerms`.
+
+	* Code coverage: permute now has a test suite that covers
+	~87% of the current code base.
+
 Version 0.8-4
 
 	* Update testthat unit testing to recommended usage.
@@ -14,6 +51,10 @@ Version 0.8-4
 
 	* blocks new in-devel extractor and replacement function `blocks`.
 	These are not currently exported so use at your own risk...
+
+	* permute-deprecate.Rd was missing an \alias{}
+
+	Reported by: Kurt Hornik (CRAN)
 
 Version 0.8-3
 

@@ -14,12 +14,6 @@
     object
 }
 
-`setNperm<-.permControl` <- function(object, value) {
-    object[["nperm"]] <- value
-    object <- fixupCall(object, "nperm", value)
-    object
-}
-
 `setMaxperm<-` <- function(object, value) {
     UseMethod("setMaxperm<-")
 }
@@ -29,12 +23,6 @@
 }
 
 `setMaxperm<-.how` <- function(object, value) {
-    object[["maxperm"]] <- value
-    object <- fixupCall(object, "maxperm", value)
-    object
-}
-
-`setMaxperm<-.permControl` <- function(object, value) {
     object[["maxperm"]] <- value
     object <- fixupCall(object, "maxperm", value)
     object
@@ -54,12 +42,6 @@
     object
 }
 
-`setMinperm<-.permControl` <- function(object, value) {
-    object[["minperm"]] <- value
-    object <- fixupCall(object, "minperm", value)
-    object
-}
-
 `setComplete<-` <- function(object, value) {
     UseMethod("setComplete<-")
 }
@@ -69,14 +51,6 @@
 }
 
 `setComplete<-.how` <- function(object, value) {
-    if (!is.null(value))
-        value <- rep(as.logical(value), length.out = 1)
-    object[["complete"]] <- value
-    object <- fixupCall(object, "complete", value)
-    object
-}
-
-`setComplete<-.permControl` <- function(object, value) {
     if (!is.null(value))
         value <- rep(as.logical(value), length.out = 1)
     object[["complete"]] <- value
@@ -100,14 +74,6 @@
     object
 }
 
-`setAllperms<-.permControl` <- function(object, value) {
-    if (!is.null(value))
-        value <- as.matrix(value)
-    object[["all.perms"]] <- value
-    object <- fixupCall(object, "all.perms", value)
-    object
-}
-
 `setMake<-` <- function(object, value) {
     UseMethod("setMake<-")
 }
@@ -117,14 +83,6 @@
 }
 
 `setMake<-.how` <- function(object, value) {
-    if (!is.null(value))
-        value <- rep(as.logical(value), length.out = 1)
-    object[["make"]] <- value
-    object <- fixupCall(object, "make", value)
-    object
-}
-
-`setMake<-.permControl` <- function(object, value) {
     if (!is.null(value))
         value <- rep(as.logical(value), length.out = 1)
     object[["make"]] <- value
@@ -149,15 +107,6 @@
     object
 }
 
-`setBlocks<-.permControl` <- function(object, value) {
-    if (!is.null(value))
-        value <- as.factor(value)
-    object["blocks"] <- list(value)
-    object[["blocks.name"]] <- deparse(substitute(value))
-    object <- fixupCall(object, "blocks", value)
-    object
-}
-
 `setObserved<-` <- function(object, value) {
     UseMethod("setObserved<-")
 }
@@ -167,14 +116,6 @@
 }
 
 `setObserved<-.how` <- function(object, value) {
-    if (!is.null(value))
-        value <- rep(as.logical(value), length.out = 1)
-    object[["observed"]] <- value
-    object <- fixupCall(object, "observed", value)
-    object
-}
-
-`setObserved<-.permControl` <- function(object, value) {
     if (!is.null(value))
         value <- rep(as.logical(value), length.out = 1)
     object[["observed"]] <- value
@@ -224,10 +165,13 @@
 }
 
 `setStrata<-.how` <- function(object, value) {
-    if (!is.null(value))
+    if (!is.null(value)) {
         value <- as.factor(value)
-    object[["blocks"]] <- value
-    object <- fixupCall(object, "blocks", getCall(value))
+    }
+    ## get Plots
+    plots <- getPlots(object)
+    setStrata(plots) <- value
+    setPlots(object) <- plots
     object
 }
 
@@ -235,7 +179,7 @@
     if (!is.null(value))
         value <- as.factor(value)
     object[["strata"]] <- value
-    object <- fixupCall(object, "strata", getCall(value))
+    object <- fixupCall(object, "strata", value) # value was getCall(value))
     object
 }
 
@@ -369,16 +313,16 @@
 `setMirror<-.Within` <- function(object, value) {
     if (!is.null(value))
         value <- rep(as.logical(value), length.out = 1)
-    object[["Mirror"]] <- value
-    object <- fixupCall(object, "Mirror", value)
+    object[["mirror"]] <- value
+    object <- fixupCall(object, "mirror", value)
     object
 }
 
 `setMirror<-.Plots` <- function(object, value) {
     if (!is.null(value))
         value <- rep(as.logical(value), length.out = 1)
-    object[["Mirror"]] <- value
-    object <- fixupCall(object, "Mirror", value)
+    object[["mirror"]] <- value
+    object <- fixupCall(object, "mirror", value)
     object
 }
 
@@ -398,8 +342,8 @@
 `setConstant<-.Within` <- function(object, value) {
     if (!is.null(value))
         value <- rep(as.logical(value), length.out = 1)
-    object[["Constant"]] <- value
-    object <- fixupCall(object, "Constant", value)
+    object[["constant"]] <- value
+    object <- fixupCall(object, "constant", value)
     object
 }
 

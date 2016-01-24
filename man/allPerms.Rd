@@ -3,6 +3,7 @@
 \alias{print.allPerms}
 \alias{summary.allPerms}
 \alias{print.summary.allPerms}
+\alias{as.matrix.allPerms}
 
 \title{Complete enumeration of all possible permutations}
 \description{
@@ -13,6 +14,8 @@
 allPerms(n, control = how(), check = TRUE)
 
 \method{summary}{allPerms}(object, \dots)
+
+\method{as.matrix}{allPerms}(x, \dots)
 }
 \arguments{
   \item{n}{the number of observations or an 'object' from which the
@@ -25,6 +28,9 @@ allPerms(n, control = how(), check = TRUE)
     function checked the design earlier.}
   \item{object}{an object of class \code{"allPerms"}.}
   \item{\dots}{arguments to other methods.}
+  \item{x}{
+    an object of class \code{"allPerms"}, as returned by \code{allPerms}.
+  }
 }
 \details{
   Function \code{allPerms} enumerates all possible permutations for the 
@@ -43,6 +49,10 @@ allPerms(n, control = how(), check = TRUE)
   control this and guard against trying to evaluate too large a number
   of permutations, if the number of possible permutations is larger than
   \code{getMaxperm(control)}, \code{allPerms} exits with an error.
+
+  The \code{as.matrix} method sets the \code{control} and \code{seed}
+  attributes to \code{NULL} and removes the \code{"permutationMatrix"}
+  class, resulting in a standard matrix object.
 }
 \value{
   For \code{allPerms}, and object of class \code{"allPerms"}, a matrix

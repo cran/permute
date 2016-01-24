@@ -4,7 +4,7 @@
                   nperm = 199,
                   complete = FALSE,
                   maxperm = 9999,
-                  minperm = 99,
+                  minperm = 5040,
                   all.perms = NULL,
                   make = TRUE,
                   observed = FALSE) {
@@ -22,7 +22,9 @@
         ## evaluate arguments other than within and plots
         ## those handled in their respective functions
         for (i in args[!args %in% c("within","plots")]) {
-            .ll[[i]] <- eval(.ll[[i]], parent.frame())
+            if(!is.null(.ll[[i]])) {
+                .ll[[i]] <- eval(.ll[[i]], parent.frame())
+            }
         }
     }
 
