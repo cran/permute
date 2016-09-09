@@ -1,5 +1,5 @@
 
-R version 3.2.3 Patched (2016-01-03 r69846) -- "Wooden Christmas-Tree"
+R version 3.3.0 Patched (2016-05-12 r70603) -- "Supposedly Educational"
 Copyright (C) 2016 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -32,7 +32,7 @@ Type 'q()' to quit R.
 > ### Name: allPerms
 > ### Title: Complete enumeration of all possible permutations
 > ### Aliases: allPerms print.allPerms summary.allPerms
-> ###   print.summary.allPerms as.matrix.allPerms
+> ###   print.summary.allPerms as.matrix.allPerms as.allPerms
 > 
 > ### ** Examples
 > 
@@ -204,7 +204,7 @@ Contains observed ordering?: No
 > ### ** Examples
 > 
 > ## only run this example if vegan is available
-> if (require("vegan")) {
+> if (suppressPackageStartupMessages(require("vegan"))) {
 +     ## use example data from ?pyrifos in package vegan
 +     example(pyrifos)
 + 
@@ -254,9 +254,6 @@ Contains observed ordering?: No
 +     check(pyrifos, how(plots = Plots(strata = ditch, type = "free"),
 +                        within = Within(type = "none")))
 + }
-Loading required package: vegan
-Loading required package: lattice
-This is vegan 2.3-3
 
 pyrifs> data(pyrifos)
 
@@ -503,6 +500,7 @@ detaching ‘package:vegan’, ‘package:lattice’
 > ###   getComplete.default getComplete.how getComplete.permControl getMake
 > ###   getMake.default getMake.how getObserved getObserved.default
 > ###   getObserved.how getAllperms getAllperms.default getAllperms.how
+> ###   getControl getHow getControl.default getControl.allPerms
 > ### Keywords: methods utils
 > 
 > ### ** Examples
@@ -641,7 +639,7 @@ Permutation details:
 > ### Name: nobs-methods
 > ### Title: Number of observations in a given object
 > ### Aliases: nobs-methods nobs.numeric nobs.integer nobs.matrix
-> ###   nobs.data.frame
+> ###   nobs.data.frame nobs.factor nobs.character
 > 
 > ### ** Examples
 > 
@@ -1159,7 +1157,7 @@ p4 5 1 2 3 4 10  6  7  8  9 15 11 12 13 14 20 16 17 18 19
 > ###
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  3.867 0.043 3.906 0 0 
+Time elapsed:  4.459 0.081 4.542 0 0 
 > grDevices::dev.off()
 null device 
           1 

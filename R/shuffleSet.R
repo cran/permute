@@ -20,7 +20,7 @@
     }
 
     ## handle a vector, matrix, or data frame input; derive n from it
-    if (((is.numeric(n) || is.integer(n) || is.factor(n)) &&
+    if (((is.numeric(n) || is.integer(n) || is.factor(n) || is.character(n)) &&
          length(n) > 1L) ||
         is.matrix(n) ||
         is.data.frame(n)) {
@@ -37,7 +37,7 @@
         ## need to check number of permutations won't blow up
         pcheck <- check(sn, control = control, quietly = quietly)
         ## control possibly now updated
-        control <- pcheck$control
+        control <- getControl(pcheck)
     }
 
     if(is.null(AP <- getAllperms(control))) {
@@ -74,7 +74,7 @@
     ## out and return that. This has the nice side-effect of not
     ## generating any non-unique permutations. Suggested by Jari.
     if ((nr <- nrow(out)) > nset) {
-        out <- out[sample.int(nr, nset), ]
+        out <- out[sample.int(nr, nset), , drop = FALSE]
     }
 
     ## Attach random seed stored earlier to permutation matrix
