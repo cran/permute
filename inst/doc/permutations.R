@@ -5,6 +5,7 @@
 ###################################################
 options("prompt" = "R> ", "continue" = "+  ")
 options(useFancyQuotes="UTF-8")
+suppressWarnings(RNGversion("3.5.0"))
 
 
 ###################################################
@@ -60,13 +61,13 @@ Djackal[5000] <- with(jackal, meanDif(Length, Sex))
 
 
 ###################################################
-### code chunk number 8: permutations.Rnw:121-122
+### code chunk number 8: permutations.Rnw:122-123
 ###################################################
 (Dbig <- sum(Djackal >= Djackal[5000]))
 
 
 ###################################################
-### code chunk number 9: permutations.Rnw:125-126
+### code chunk number 9: permutations.Rnw:126-127
 ###################################################
 Dbig / length(Djackal)
 
@@ -80,7 +81,7 @@ rug(Djackal[5000], col = "red", lwd = 2)
 
 
 ###################################################
-### code chunk number 11: permutations.Rnw:138-139
+### code chunk number 11: permutations.Rnw:139-140
 ###################################################
 choose(20, 10)
 
@@ -165,7 +166,7 @@ pset
 
 
 ###################################################
-### code chunk number 21: permutations.Rnw:252-253
+### code chunk number 21: permutations.Rnw:253-254
 ###################################################
 how(nperm = 999)
 
