@@ -1,9 +1,9 @@
 ## Restricted permutations with R
 
-[![CRAN version](http://www.r-pkg.org/badges/version/permute)](https://cran.r-project.org/package=permute)
-[![](http://cranlogs.r-pkg.org/badges/grand-total/permute)](https://cran.r-project.org/package=permute)
+[![CRAN version](https://www.r-pkg.org/badges/version/permute)](https://cran.r-project.org/package=permute)
+[![](https://cranlogs.r-pkg.org/badges/grand-total/permute)](https://cran.r-project.org/package=permute)
 [![R-CMD-check](https://github.com/gavinsimpson/permute/workflows/R-CMD-check/badge.svg)](https://github.com/gavinsimpson/cocorresp/actions)
-[![codecov.io](https://codecov.io/github/gavinsimpson/permute/coverage.svg?branch=master)](https://codecov.io/github/gavinsimpson/permute?branch=master)
+[![codecov](https://codecov.io/gh/gavinsimpson/permute/graph/badge.svg?token=2FYEfBBSJ7)](https://app.codecov.io/gh/gavinsimpson/permute)
 
 ## What is permute?
 
@@ -21,7 +21,7 @@ Several types of permutation are available in **permute**:
  * Time series or line transect designs, where the temporal or spatial ordering is preserved.
  * Spatial grid designs, where the spatial ordering is preserved in both coordinate directions
  * Permutation of plots or groups of samples.
- * Blocking factors which restrict permutations to within blocks. The preceding designs can be nested within blocks, allowing analysis of hierachical designs (e.g. split plot designs)
+ * Blocking factors which restrict permutations to within blocks. The preceding designs can be nested within blocks, allowing analysis of hierarchical designs (e.g. split plot designs)
 
 ### References
 
