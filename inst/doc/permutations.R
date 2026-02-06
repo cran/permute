@@ -14,7 +14,7 @@ jack.t
 
 ## ----meanFun------------------------------------------------------------------
 meanDif <- function(x, grp) {
- mean(x[grp == "Male"]) - mean(x[grp == "Female"])
+  mean(x[grp == "Male"]) - mean(x[grp == "Female"])
 }
 
 ## ----randJackal---------------------------------------------------------------

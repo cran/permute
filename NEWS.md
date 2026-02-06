@@ -1,10 +1,19 @@
-# permute News
+# permute 0.9-10
 
-## Changes in version 0.9-8
+## User visible changes
+
+* *permute* now depends on R versions >= 3.6.0
+
+## Bug fixes
+
+* `numPerms()` tries harder to avoid floating point issues when computing the
+  number of permutations for the current design. #41
+
+# permute 0.9-8
 
 * Updated reference output for examples following release of *vegan* 2.7.1.
 
-## Changes in version 0.9-7
+# permute 0.9-7
 
 ### Bug fixes
 
@@ -13,7 +22,7 @@
   an error in the development version of R (at the time of writing).
   Reported by Brian Ripley.
 
-## Changes in version 0.9-6
+# permute 0.9-6
 
 ### Bug fixes
 
@@ -21,25 +30,25 @@
   permutations, leading to problems with `shuffleSet()` also.
   [#28 reported by Cajo ter Braak](https://github.com/gavinsimpson/permute/issues/28)
 
-## Changes in version 0.9-5
+# permute 0.9-5
 
 Changes to accommodate the new RNG in R >= 3.6.0
 
-## Changes in version 0.9-4
+# permute 0.9-4
 
 The example in `?check` was made to suppress package startup messages from
 vegan.
 
-## Changes in version 0.9-3
+# permute 0.9-3
 
 This release fixed some non-canonical-form CRAN URLs.
 
-## Changes in version 0.9-2
+# permute 0.9-2
 
 This release was purely to avoid issues with CRAN as a new release of vegan had
 been released and the example reference material hadn't been updated to match.
 
-## Changes in version 0.9-1
+# permute 0.9-1
 
 ### General
 
@@ -51,7 +60,7 @@ A minor bug fix release to address a single problem.
    invoked because of a low set of possible permutations.
    [GitHub Issue #19](https://github.com/gavinsimpson/permute/issues/19)
 
-## Changes in version 0.9-0
+# permute 0.9-0
 
 ### General
 
@@ -83,7 +92,7 @@ github for details.
 * `permControl()` and `permuplot()` are defunct and have been removed 
 from the package.
 
-## Changes in version 0.8-0
+# permute 0.8-0
 
 ### General
 

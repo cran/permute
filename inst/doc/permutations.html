@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gavin L. Simpson" />
 
-<meta name="date" content="2025-06-25" />
+<meta name="date" content="2026-02-06" />
 
 <title>Restricted permutations; using the permute package</title>
 
@@ -138,7 +138,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; }
 div.csl-bib-body { }
 div.csl-entry {
 clear: both;
-margin-bottom: 0em;
 }
 .hanging div.csl-entry {
 margin-left:2em;
@@ -351,7 +350,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Restricted permutations; using the permute package</h1>
 <h4 class="author">Gavin L. Simpson</h4>
-<h4 class="date">2025-06-25</h4>
+<h4 class="date">2026-02-06</h4>
 
 
 
@@ -359,11 +358,11 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1>Introduction</h1>
 <p>In classical frequentist statistics, the significance of a relationship or model is determined by reference to a null distribution for the test statistic. This distribution is derived mathematically and the probability of achieving a test statistic as large or larger than the observed statistic <em>if</em> the null hypothesis were true is looked-up from this null distribution. In deriving this probability, some assumptions about the data or the errors are made. If these assumptions are violated, then the validity of the derived <span class="math inline">\(p\)</span>-value may be questioned.</p>
 <p>An alternative to deriving the null distribution from theory is to generate a null distribution of the test statistic by randomly shuffling the data in some manner, refitting the model and deriving values for the test statistic for the permuted data. The level of significance of the test can be computed as the proportion of values of the test statistic from the null distribution that are equal to or larger than the observed value.</p>
-<p>In many data sets, simply shuffling the data at random is inappropriate; under the null hypothesis, the data may not ne freely exchangeable, for example if there is temporal or spatial correlation, or the samples are clustered in some way, such as multiple samples collected from each of a number of fields. The <em>permute</em> package was designed to provide facilities for generating these restricted permutations for use in randomisation tests. <em>permute</em> takes as its motivation the permutation schemes originally available in <em>Canoco</em> version 3.1 <span class="citation">(Braak 1990)</span>, which employed the cyclic- or toroidal-shifts suggested by <span class="citation">Besag and Clifford (1989)</span>.</p>
+<p>In many data sets, simply shuffling the data at random is inappropriate; under the null hypothesis, the data may not be freely exchangeable, for example if there is temporal or spatial correlation, or the samples are clustered in some way, such as multiple samples collected from each of a number of fields. The <em>permute</em> package was designed to provide facilities for generating these restricted permutations for use in randomisation tests. <em>permute</em> takes as its motivation the permutation schemes originally available in <em>Canoco</em> version 3.1 <span class="citation">(Braak 1990)</span>, which employed the cyclic- or toroidal-shifts suggested by <span class="citation">Besag and Clifford (1989)</span>.</p>
 </div>
 <div id="sec:simple" class="section level1">
 <h1>Simple randomisation</h1>
-<p>As an illustration of both randomisation and simple usage of the <em>permute</em> package we consider a small data set of mandible length measurements on specimens of the golden jackal (<em>Canis aureus</em>) from the British Museum of Natural History, London, UK. These data were collected as part of a study comparing prehistoric and modern canids <span class="citation">(Higham, Kijngam, and Manly 1980)</span>, and were analysed by <span class="citation">Manly (2007)</span>. There are ten measurements of mandible length on both male and female specimens. The data are available in the <code>jackal</code> data frame supplied with <em>permute</em>.</p>
+<p>As an illustration of both randomisation and simple usage of the <em>permute</em> package we consider a small data set of mandible length measurements on specimens of the golden jackal (<em>Canis aureus</em>) from the British Museum of Natural History, London, UK. These data were collected as part of a study comparing prehistoric and modern canids <span class="citation">(Higham et al. 1980)</span>, and were analysed by <span class="citation">Manly (2007)</span>. There are ten measurements of mandible length on both male and female specimens. The data are available in the <code>jackal</code> data frame supplied with <em>permute</em>.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;permute&quot;</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">data</span>(jackal)</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>jackal</span></code></pre></div>
@@ -416,7 +415,7 @@ fligner.test(Length ~ Sex, data = jackal)</code></pre>
 <p>A randomisation test of the same hypothesis can be performed by randomly allocating ten of the mandible lengths to the male group and the remaining lengths to the female group. This randomisation is justified under the null hypothesis because the observed difference in mean mandible length between the two sexes is just a typical value for the difference in a sample if there were no difference in the population. An appropriate test statistic needs to be selected. We could use the <span class="math inline">\(t\)</span> statistic as derived in the <span class="math inline">\(t\)</span>-test. Alternatively, we could base our randomisation test on the difference of means <span class="math inline">\(D_i\)</span> (male - female).</p>
 <p>The main function in <em>permute</em> for providing random permutations is <code>shuffle()</code>. We can write our own randomisation test for the <code>jackal</code> data by first creating a function to compute the difference of means for two groups</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>meanDif <span class="ot">&lt;-</span> <span class="cf">function</span>(x, grp) {</span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a> <span class="fu">mean</span>(x[grp <span class="sc">==</span> <span class="st">&quot;Male&quot;</span>]) <span class="sc">-</span> <span class="fu">mean</span>(x[grp <span class="sc">==</span> <span class="st">&quot;Female&quot;</span>])</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="fu">mean</span>(x[grp <span class="sc">==</span> <span class="st">&quot;Male&quot;</span>]) <span class="sc">-</span> <span class="fu">mean</span>(x[grp <span class="sc">==</span> <span class="st">&quot;Female&quot;</span>])</span>
 <span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>}</span></code></pre></div>
 <p>which can be used in a simple <code>for()</code> loop to generate the null distribution for the difference of means. First, we allocate some storage to hold the null difference of means; here we use 4999 random permutations so allocate a vector of length 5000. Then we iterate, randomly generating an ordering of the <code>Sex</code> vector and computing the difference of means for that permutation.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>Djackal <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="at">length =</span> <span class="dv">5000</span>)</span>
@@ -671,11 +670,11 @@ define the dimensions of the spatial grid.
 a factor variable. <code>strata</code> describes the grouping of samples at the <em>plot</em> level, where samples from the same <em>plot</em> are take the same <em>level</em> of the factor.
 </dd>
 </dl>
-<p>When a <em>plot</em>-level design is specified, samples are never permuted between <em>plots</em>, only within plots if they are permuted at all. Hence, the type of permutation <em>within</em> the <em>plots</em> is controlled by <code>Within()</code>. Note also that with <code>Plots()</code>, the way the individual <em>plots</em> are permuted can be from any one of the four basic permutation types; <code>&quot;none&quot;</code>, <code>&quot;free&quot;</code>, <code>&quot;series&quot;</code>, and <code>&quot;grid&quot;</code>, as described above. To permute the <em>plots</em> only (i.e. retain the ordering of the samples <em>within</em> plots), you also need to specify <code>Within(type = &quot;none&quot;, ...)</code> as the default in <code>Within()</code> is <code>type = &quot;free&quot;</code>. The ability to permute the plots whilst preserving the within-plot ordering is an impotant feature in testing explanatory factors at the whole-plot level in split-plot designs and in multifactorial analysis of variance <span class="citation">(Braak and Šmilauer 2012)</span>.</p>
+<p>When a <em>plot</em>-level design is specified, samples are never permuted between <em>plots</em>, only within plots if they are permuted at all. Hence, the type of permutation <em>within</em> the <em>plots</em> is controlled by <code>Within()</code>. Note also that with <code>Plots()</code>, the way the individual <em>plots</em> are permuted can be from any one of the four basic permutation types; <code>&quot;none&quot;</code>, <code>&quot;free&quot;</code>, <code>&quot;series&quot;</code>, and <code>&quot;grid&quot;</code>, as described above. To permute the <em>plots</em> only (i.e. retain the ordering of the samples <em>within</em> plots), you also need to specify <code>Within(type = &quot;none&quot;, ...)</code> as the default in <code>Within()</code> is <code>type = &quot;free&quot;</code>. The ability to permute the plots whilst preserving the within-plot ordering is an important feature in testing explanatory factors at the whole-plot level in split-plot designs and in multifactorial analysis of variance <span class="citation">(Braak and Šmilauer 2012)</span>.</p>
 </div>
 <div id="specifying-blocks-the-top-of-the-permute-hierarchy" class="section level3">
 <h3>Specifying blocks; the top of the <em>permute</em> hierarchy</h3>
-<p>In constrast to the <em>within</em> and <em>plots</em> levels, the <em>blocks</em> level is simple to specify; all that is required is an indicator variable the same length as the data. Usually this is a factor, but <code>how()</code> will take anything that can be coerced to a factor via <code>as.factor()</code>.</p>
+<p>In contrast to the <em>within</em> and <em>plots</em> levels, the <em>blocks</em> level is simple to specify; all that is required is an indicator variable the same length as the data. Usually this is a factor, but <code>how()</code> will take anything that can be coerced to a factor via <code>as.factor()</code>.</p>
 <p>It is worth repeating what the role of the block-level structure is; blocks simply restrict permutation to <em>within</em>, and never between, blocks, and blocks are never permuted. This is reflected in the implementation; the <em>split</em>-<em>apply</em>-<code>combine</code> paradigm is used to split on the blocking factor, the plot- and within-level permutation design is applied separately to each block, and finally the sets of permutations for each block are recombined.</p>
 </div>
 </div>
@@ -686,7 +685,7 @@ a factor variable. <code>strata</code> describes the grouping of samples at the 
 </div>
 <div id="using-permute-in-r-functions" class="section level1">
 <h1>Using <em>permute</em> in <em>R</em> functions</h1>
-<p><em>permute</em> originally started life as a set of functions contained within the <em>vegan</em> package <span class="citation">(Oksanen et al. 2013)</span> designed to provide a replacement for the <code>permuted.index()</code> function. From these humble origins, I realised other users and package authors might want to make use of the code I was writing and so Jari oksanen, the maintainer of <em>vegan</em>, and I decided to spin off the code into the <em>permute</em> package. Hence from the very beginning, <em>permute</em> was intended for use both by users, to defining permutation designs, and by package authors, with which to implement permutation tests within their packages.</p>
+<p><em>permute</em> originally started life as a set of functions contained within the <em>vegan</em> package <span class="citation">(Oksanen et al. 2013)</span> designed to provide a replacement for the <code>permuted.index()</code> function. From these humble origins, I realised other users and package authors might want to make use of the code I was writing and so Jari Oksanen, the maintainer of <em>vegan</em>, and I decided to spin off the code into the <em>permute</em> package. Hence from the very beginning, <em>permute</em> was intended for use both by users, to defining permutation designs, and by package authors, with which to implement permutation tests within their packages.</p>
 <p>In the previous sections, I described the various user-facing functions that are employed to set up permutation designs and generate permutations from these. Here I will outline how package authors can use functionality in the <em>permute</em> package to implement permutation tests.</p>
 <p>In Section~@ref{sec:simple} I showed how a permutation test function could be written using the <code>shuffle()</code> function and allowing the user to pass into the test function an object created with <code>how()</code>. As mentioned earlier, it is more efficient to generate a set of permutations via a call to <code>shuffleSet()</code> than to repeatedly call <code>shuffle()</code> and large number of times. Another advantage of using <code>shuffleSet()</code> is that once the set of permutations has been created, parallel processing can be used to break the set of permutations down into smaller chunks, each of which can be worked on simultaneously. As a result, package authors are encouraged to use <code>shuffleSet()</code> instead of the simpler <code>shuffle()</code>.</p>
 <p>To illustrate how to use <em>permute</em> in <em>R</em> functions, I’ll rework the permutation test I used for the <code>jackal</code> data earlier in Section~@ref{sec:simple}.</p>
@@ -751,7 +750,7 @@ a factor variable. <code>strata</code> describes the grouping of samples at the 
 <span id="cb46-3"><a href="#cb46-3" tabindex="-1"></a><span class="fu">system.time</span>(ppval <span class="ot">&lt;-</span> <span class="fu">ppt.test</span>(jackal<span class="sc">$</span>Length, jackal<span class="sc">$</span>Sex, <span class="at">nperm =</span> <span class="dv">9999</span>,</span>
 <span id="cb46-4"><a href="#cb46-4" tabindex="-1"></a>                              <span class="at">cores =</span> <span class="dv">2</span>))</span></code></pre></div>
 <pre><code>##    user  system elapsed 
-##   0.049   0.005   0.258</code></pre>
+##   0.048   0.005   0.259</code></pre>
 <div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" tabindex="-1"></a>ppval</span></code></pre></div>
 <pre><code>## [1] 0.0018</code></pre>
 <p>In this case there is little to be gained by splitting the computations over two CPU cores</p>
@@ -759,12 +758,12 @@ a factor variable. <code>strata</code> describes the grouping of samples at the 
 <span id="cb50-2"><a href="#cb50-2" tabindex="-1"></a><span class="fu">system.time</span>(ppval2 <span class="ot">&lt;-</span> <span class="fu">ppt.test</span>(jackal<span class="sc">$</span>Length, jackal<span class="sc">$</span>Sex, <span class="at">nperm =</span> <span class="dv">9999</span>,</span>
 <span id="cb50-3"><a href="#cb50-3" tabindex="-1"></a>                               <span class="at">cores =</span> <span class="dv">1</span>))</span></code></pre></div>
 <pre><code>##    user  system elapsed 
-##   0.164   0.003   0.168</code></pre>
+##   0.162   0.001   0.163</code></pre>
 <div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" tabindex="-1"></a>ppval2</span></code></pre></div>
 <pre><code>## [1] 0.0018</code></pre>
 <p>The cost of setting up and managing the parallel processes, and recombining the separate sets of results almost negates the gain in running the permutations in parallel. Here, the computations involved in <code>meanDif()</code> are trivial and we would expect greater efficiencies from running the permutations in parallel for more complex analyses.</p>
-<div id="accesing-and-changing-permutation-designs" class="section level2">
-<h2>Accesing and changing permutation designs</h2>
+<div id="accessing-and-changing-permutation-designs" class="section level2">
+<h2>Accessing and changing permutation designs</h2>
 <p>The object created by <code>how()</code> is a relatively simple list containing the settings for the specified permutation design. As such one could use the standard subsetting and replacement functions in base <em>R</em> to alter components of the list. This is not recommended, however, as the internal structure of the list returned by <code>how()</code> may change in a later version of <em>permute</em>. Furthermore, to facilitate the use of <code>update()</code> at the user-level to alter the permutation design in a user-friendly way, the matched <code>how()</code> call is stored within the list along with the matched calls for any <code>Within()</code> or <code>Plots()</code> components. These matched calls need to be updated too if the list describing the permutation design is altered. To allow function writers to access and alter permutation designs, <em>permute</em> provides a series of extractor and replacement functions that have the forms <code>getFoo()</code> and <code>setFoo&lt;-()</code>, respectively,where <code>Foo</code> is replaced by a particular component to be extracted or replaced.</p>
 <p>The <code>getFoo()</code> functions provided by <em>permute</em> are</p>
 <dl>
@@ -857,7 +856,7 @@ updates the status of the <code>complete</code> setting. Takes a logical vector 
 </dd>
 <dt><code>setMake&lt;-()</code></dt>
 <dd>
-sets the indicator controlling whether the entrie set of permutations is generated during checking of the design via <code>check()</code>. Takes a logical vector of length 1 or any object coercible to such.
+sets the indicator controlling whether the entire set of permutations is generated during checking of the design via <code>check()</code>. Takes a logical vector of length 1 or any object coercible to such.
 </dd>
 <dt><code>setObserved&lt;-()</code></dt>
 <dd>
@@ -908,48 +907,49 @@ updates the indicator of whether the observed ordering is included in the set of
 <p>This vignette was built within the following environment:</p>
 <pre><code>## ─ Session info ───────────────────────────────────────────────────────────────
 ##  setting  value
-##  version  R version 4.5.0 (2025-04-11)
-##  os       macOS Sequoia 15.5
+##  version  R version 4.5.2 (2025-10-31)
+##  os       macOS Tahoe 26.2
 ##  system   aarch64, darwin20
 ##  ui       X11
 ##  language (EN)
 ##  collate  C
-##  ctype    en_US.UTF-8
+##  ctype    C.UTF-8
 ##  tz       Europe/Copenhagen
-##  date     2025-06-25
-##  pandoc   3.7.0.2 @ /opt/homebrew/bin/ (via rmarkdown)
-##  quarto   1.7.31 @ /usr/local/bin/quarto
+##  date     2026-02-06
+##  pandoc   3.8.3 @ /opt/homebrew/bin/ (via rmarkdown)
+##  quarto   1.8.27 @ /Applications/quarto/bin/quarto
 ## 
 ## ─ Packages ───────────────────────────────────────────────────────────────────
 ##  package     * version date (UTC) lib source
-##  bookdown      0.43    2025-04-15 [3] CRAN (R 4.5.0)
-##  bslib         0.9.0   2025-01-30 [3] CRAN (R 4.5.0)
+##  bookdown      0.46    2025-12-05 [3] CRAN (R 4.5.2)
+##  bslib         0.10.0  2026-01-26 [3] CRAN (R 4.5.2)
 ##  cachem        1.1.0   2024-05-16 [3] CRAN (R 4.5.0)
 ##  cli           3.6.5   2025-04-23 [3] CRAN (R 4.5.0)
-##  digest        0.6.37  2024-08-19 [3] CRAN (R 4.5.0)
-##  evaluate      1.0.3   2025-01-10 [3] CRAN (R 4.5.0)
+##  digest        0.6.39  2025-11-19 [3] CRAN (R 4.5.2)
+##  evaluate      1.0.5   2025-08-27 [3] CRAN (R 4.5.0)
 ##  fastmap       1.2.0   2024-05-15 [3] CRAN (R 4.5.0)
-##  htmltools     0.5.8.1 2024-04-04 [3] CRAN (R 4.5.0)
+##  htmltools     0.5.9   2025-12-04 [3] CRAN (R 4.5.2)
 ##  jquerylib     0.1.4   2021-04-26 [3] CRAN (R 4.5.0)
 ##  jsonlite      2.0.0   2025-03-27 [3] CRAN (R 4.5.0)
-##  knitr         1.50    2025-03-16 [3] CRAN (R 4.5.0)
-##  lifecycle     1.0.4   2023-11-07 [3] CRAN (R 4.5.0)
-##  permute     * 0.9-8   2025-06-25 [1] local
+##  knitr         1.51    2025-12-20 [3] CRAN (R 4.5.2)
+##  lifecycle     1.0.5   2026-01-08 [3] CRAN (R 4.5.2)
+##  otel          0.2.0   2025-08-29 [3] CRAN (R 4.5.0)
+##  permute     * 0.9-10  2026-02-06 [1] local
 ##  R6            2.6.1   2025-02-15 [3] CRAN (R 4.5.0)
-##  rlang         1.1.6   2025-04-11 [3] CRAN (R 4.5.0)
-##  rmarkdown     2.29    2024-11-04 [3] CRAN (R 4.5.0)
+##  rlang         1.1.7   2026-01-09 [3] CRAN (R 4.5.2)
+##  rmarkdown     2.30    2025-09-28 [3] CRAN (R 4.5.0)
 ##  sass          0.4.10  2025-04-11 [3] CRAN (R 4.5.0)
 ##  sessioninfo   1.2.3   2025-02-05 [3] CRAN (R 4.5.0)
-##  xfun          0.52    2025-04-02 [3] CRAN (R 4.5.0)
-##  yaml          2.3.10  2024-07-26 [3] CRAN (R 4.5.0)
+##  xfun          0.56    2026-01-18 [3] CRAN (R 4.5.2)
+##  yaml          2.3.12  2025-12-10 [3] CRAN (R 4.5.2)
 ## 
-##  [1] /private/var/folders/yq/gqj7yv7j3n17w__256r9vxn40000gn/T/RtmpPeTY4j/Rinst86431c29d9d9
-##  [2] /private/var/folders/yq/gqj7yv7j3n17w__256r9vxn40000gn/T/Rtmp0ZTPKf/temp_libpath426e566d1c7f
+##  [1] /private/var/folders/yq/gqj7yv7j3n17w__256r9vxn40000gn/T/Rtmpd1PJQo/Rinst169f271685a90
+##  [2] /private/var/folders/yq/gqj7yv7j3n17w__256r9vxn40000gn/T/RtmpB8TV5I/temp_libpathde151d5a144b
 ##  [3] /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library
 ##  * ── Packages attached to the search path.
 ## 
 ## ──────────────────────────────────────────────────────────────────────────────</code></pre>
-<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-besagclifford" class="csl-entry">
 Besag, J., and P. Clifford. 1989. <span>“Generalized Monte Carlo Significance Tests.”</span> <em>Biometrika</em> 76 (4): 633–42.
 </div>
@@ -963,10 +963,10 @@ Braak, C. J. F. ter, and P. Šmilauer. 2012. <em>Canoco Reference Manual and Use
 Higham, C. F. W, A. Kijngam, and B. F. J. Manly. 1980. <span>“An Analysis of Prehistoric Canid Remains from <span>T</span>hailand.”</span> <em>Journal of Archaeological Science</em> 7: 149–65.
 </div>
 <div id="ref-manly07" class="csl-entry">
-Manly, B. F. J. 2007. <em>Randomization, Bootstrap and Monte Carlo Methods in Biology</em>. 3rd ed. Boca Raton: Chapman &amp; Hall/CRC.
+Manly, B. F. J. 2007. <em>Randomization, Bootstrap and Monte Carlo Methods in Biology</em>. 3rd ed. Chapman &amp; Hall/CRC.
 </div>
 <div id="ref-vegan" class="csl-entry">
-Oksanen, Jari, F. Guillaume Blanchet, Roeland Kindt, Pierre Legendre, Peter R. Minchin, R. B. O’Hara, Gavin L. Simpson, Peter Solymos, M. Henry H. Stevens, and Helene Wagner. 2013. <em>Vegan: Community Ecology Package</em>. <a href="http://vegan.r-forge.r-project.org/">http://vegan.r-forge.r-project.org/</a>.
+Oksanen, Jari, F. Guillaume Blanchet, Roeland Kindt, et al. 2013. <em>Vegan: Community Ecology Package</em>. <a href="http://vegan.r-forge.r-project.org/">http://vegan.r-forge.r-project.org/</a>.
 </div>
 </div>
 </div>
