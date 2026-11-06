@@ -1,3 +1,91 @@
+#' Complete enumeration of all possible permutations
+#'
+#' `allPerms` is a utility function to return the set of permutations for
+#' a given R object and a specified permutation design.
+#'
+#' Function `allPerms` enumerates all possible permutations for the number
+#' of observations and the selected permutation scheme. It has
+#' [base::print()] and [base::summary()] methods. `allPerms`
+#' returns a matrix containing all possible permutations, possibly containing
+#' the observed ordering (if argument `observed` is `TRUE`). The rows
+#' of this matrix are the various permutations and the columns reflect the
+#' number of samples.
+#'
+#' With free permutation designs, and restricted permutation schemes with large
+#' numbers of observations, there are a potentially huge number of possible
+#' permutations of the samples. It would be inefficient, not to mention
+#' incredibly time consuming, to enumerate them all. Storing all possible
+#' permutations would also become problematic in such cases. To control this
+#' and guard against trying to evaluate too large a number of permutations, if
+#' the number of possible permutations is larger than
+#' `getMaxperm(control)` or is reported as `Inf` by [numPerms()], `allPerms`
+#' exits with an error.
+#'
+#' The `as.matrix` method sets the `control` and `seed`
+#' attributes to `NULL` and removes the `"permutationMatrix"` class,
+#' resulting in a standard matrix object.
+#'
+#' With `Plots(type = "partition")`, the rows enumerate distinct
+#' assignments to the labelled groups in `Plots$strata`. If the group
+#' sizes are \eqn{n_1, \ldots, n_K}, there are \eqn{n! / \prod_k n_k!} such
+#' assignments before optionally removing the observed assignment.
+#'
+#' @aliases allPerms print.allPerms summary.allPerms print.summary.allPerms
+#' @aliases as.matrix.allPerms as.allPerms
+#' @param n the number of observations or an 'object' from which the number of
+#' observations can be determined via `getNumObs`.
+#' @param control a list of control values describing properties of the
+#' permutation design, as returned by a call to [how()].
+#' @param check logical; should `allPerms` check the design? The default
+#' is to check, but this can be skipped, for example if a function checked the
+#' design earlier.
+#' @param object for `summary.allPerms`, an object of class
+#' `"allPerms"`. For `as.allPerms` a matrix or something that can be
+#' coerced to a matrix by [base::as.matrix()].
+#' @param ... arguments to other methods.
+#' @param x an object of class `"allPerms"`, as returned by
+#' `allPerms`.
+#' @returns For `allPerms`, an object of class `"allPerms"`: a matrix
+#' whose rows are the set of all possible permutations for the supplies number
+#' of observations and permutation scheme selected. The matrix has two
+#' additional attributes `control` and `observed`. Attribute
+#' `control` contains the argument `control` (possibly updated via
+#' `check`). Attribute `observed` contains argument `observed`.
+#' @section Warning: If permuting the strata themselves, a balanced design is
+#' required (the same number of observations in each level of `strata`).
+#' This does not apply to `Plots(type = "partition")`, which supports
+#' unequal group sizes.
+#' @author Gavin Simpson
+#' @order 1
+#' @examples
+#'
+#' ## allPerms can work with a vector
+#' vec <- c(3,4,5)
+#' allPerms(vec) ## free permutation
+#'
+#' ## enumerate all possible permutations for a more complicated
+#' ## design
+#' fac <- gl(2,6)
+#' ctrl <- how(within = Within(type = "grid", mirror = FALSE,
+#'                             constant = TRUE, nrow = 3, ncol = 2),
+#'             plots = Plots(strata = fac))
+#' Nobs <- length(fac)
+#' numPerms(seq_len(Nobs), control = ctrl) ## 6
+#' (tmp <- allPerms(Nobs, control = update(ctrl, observed = TRUE)))
+#' (tmp2 <- allPerms(Nobs, control = ctrl))
+#'
+#' ## turn on mirroring
+#' ##ctrl$within$mirror <- TRUE
+#' ctrl <- update(ctrl, within = update(getWithin(ctrl), mirror = TRUE))
+#' numPerms(seq_len(Nobs), control = ctrl)
+#' (tmp3 <- allPerms(Nobs, control = update(ctrl, observed = TRUE)))
+#' (tmp4 <- allPerms(Nobs, control = ctrl))
+#'
+#' ## prints out details of the permutation scheme as
+#' ## well as the matrix of permutations
+#' summary(tmp3)
+#' summary(tmp4)
+#'
 `allPerms` <- function(n, control = how(), check = TRUE) {
     ## start
     v <- n
@@ -6,35 +94,25 @@
          v <- seq_len(n)
     ## number of observations in data
     n <- nobs(v)
-    ## check permutation scheme and update control
-    make <- getMake(control)
-    if (check) {
-        control2 <- control
-        setMake(control2) <- FALSE
-        pcheck <- check(v, control = control2, quietly = TRUE)
-    }
-    ## ctrl <- pcheck$control
-    ## if we do copy the new updated control, we need to update to
-    ## reset make
-    ## ctrl <- update(ctrl, make = make)
+    checkPartitionDesign(control, n)
 
     ## get max number of permutations
-    nperms <- numPerms(v, control = control)
+    nperms <- numPerms(v, control = control, check = check)
 
     ## sanity check - don't let this run away to infinity
     ## esp with type = "free"
     if(nperms > getMaxperm(control))
         stop("Number of possible permutations too large (> 'maxperm')")
+    if(is.infinite(nperms))
+        stop("Number of possible permutations too large to enumerate")
 
-    WI <- getWithin(control)
     strataP <- getStrata(control, which = "plots")
     typeW <- getType(control, which = "within")
-    typeP <- getType(control, which = "plot")
+    typeP <- getType(control, which = "plots")
     BLOCKS <- getBlocks(control)
     dimW <- getDim(control, which = "within")
-    dimP <- getDim(control, which = "plots")
     mirrorW <- getMirror(control, which = "within")
-    mirrorP <- getMirror(control, which = "plots")
+    symmetricW <- getSymmetric(control, which = "within")
     constantW <- getConstant(control)
 
     ## give a BLOCKS if non supplied - i.e. one block
@@ -56,25 +134,21 @@
     for (i in seq_along(spl)) {
         out[[i]] <-
             doAllPerms(spl[[i]], strataP, typeW, typeP, mirrorW,
-                       mirrorP, constantW, dimW, dimP, control2,
-                       nperms = nperms)
+                       symmetricW, constantW, dimW, control2)
     }
 
     ## bind all blocks together, repeating them as required
     out <- cbindAllPerms(out)
 
-    ## bind all the blocks together
-    ## out <- do.call(cbind, out) ## hmm are any of these the same shape?
-    out[, unlist(spl)] <- out  ## is this being done at the doAllPerms level?
+    ## Restore the original observation order after combining blocks.
+    out[, unlist(spl)] <- out
 
     if(!(observed <- getObserved(control))) {
         obs.v <- seq_len(n)
         obs.row <- apply(out, 1, function(x, obs.v) all(x == obs.v), obs.v)
         out <- out[!obs.row, , drop = FALSE]
-        ## reduce the number of permutations to get rid of the
-        ## observed ordering
-        setNperm(control) <- getNperm(control) - 1
     }
+    setNperm(control) <- nrow(out)
 
     ## as a permutationMatrix we pick up nice print method
     class(out) <- c("allPerms", "permutationMatrix", "matrix")
@@ -84,155 +158,135 @@
 }
 
 
-`doAllPerms` <- function(obs, strataP, typeW, typeP, mirrorW, mirrorP,
-                         constantW, dimW, dimP, control, nperms) {
+`doAllPerms` <- function(obs, strataP, typeW, typeP, mirrorW, symmetricW,
+                         constantW, dimW, control) {
     n <- length(obs)
 
-    ## subset strataP to take only the obs indices and drop the unused
-    ## levels
+    ## Subset plot strata to the observations in this block.
     if (!is.null(strataP)) {
         strataP <- droplevels(strataP[obs])
     }
 
-    ## also need to update the $strata component of control
-    ## FIXME: this really should have a toplevel function to set/update
-    ## sub-components of control
-    ## Pl <- getPlots(control)
-    ## setStrata(Pl) <- strataP
-    ## setPlots(control) <- Pl
+    ## Keep the block-local strata in the private control copy.
     control$plots$strata <- strataP
 
-    ## permuting within?
     if (typeW != "none") {
-        if(is.null(strataP)) {
-            ## no plot-level permutations
-            ## have to redo numPerms here because we could be within a block
-            res <- switch(typeW,
-                          free = allFree(n),
-                          series = allSeries(n, numPerms(n, control), mirrorW),
-                          grid = allGrid(n, numPerms(n, control),
-                                         dimW[1], dimW[2],
-                                         mirrorW, constantW))
-            ## use res to index original observation indices in this group
-            res[] <- obs[res]
+        res <- if (is.null(strataP)) {
+            allWithin(obs, typeW, mirrorW, symmetricW, dimW, control)
         } else {
-            ## permuting within plots
-            tab <- table(strataP)
-            pg <- unique(tab)
-            ng <-  length(tab)
-            if(constantW) {
-                ## same permutation in each plot
-                controlW <- how(within = getWithin(control))
-                nperms <- numPerms(pg, controlW)
-                ord <- switch(typeW,
-                              free = allFree(pg),
-                              series = allSeries(pg, nperms, mirrorW),
-                              grid = allGrid(pg, nperms, dimW[1],
-                              dimW[2], mirrorW, constantW))
-                res <- vector(mode = "list", length = ng)
-                ss <- seq(0, to = prod(pg, ng-1), by = pg)
-                for (i in seq_len(ng)) {
-                    res[[i]] <- ord + ss[i]
-                }
-                ## same permutation within plots, so just cbind rather than
-                ## cbindAllPerms as we don't need all combns of rows
-                res <- do.call(cbind, res)
-                res[] <- obs[res] ## index into the observations in this block
-            } else {
-                ## different permutations within plots
-                nperms <- numPerms(sum(tab), control)
-
-                if(length(pg) > 1) {
-                    ## different number of observations per level of strata
-                    if(typeW == "grid")
-                        ## FIXME: this should not be needed once all checks are
-                        ## in place in check()
-                        stop("Unbalanced grid designs are not supported")
-                    controlW <- how(within = getWithin(control))
-                    res <- vector(mode = "list", length = ng)
-                    add <- c(0, cumsum(tab)[1:(ng-1)])
-                    for(j in seq_along(tab)) {
-                        np <- numPerms(tab[j], controlW)
-                        ord <- switch(typeW,
-                                      free = allFree(tab[j]),
-                                      series = allSeries(tab[j], np, mirrorW))
-                        res[[j]] <- ord + add[j]
-                    }
-                    res <- cbindAllPerms(res)
-                    res[] <- obs[res]
-                } else {
-                    ## same number of observations per level of strata
-                    controlW <- how(within = getWithin(control))
-                    np <- numPerms(pg, controlW)
-                    ord <-
-                        switch(typeW,
-                               free = allFree(pg),
-                               series = allSeries(pg, np, mirrorW),
-                               grid = allGrid(pg, np, dimW[1],
-                               dimW[2], mirrorW, constantW))
-                    res <- vector(mode = "list", length = ng)
-                    ss <- seq(0, to = prod(pg, ng-1), by = pg)
-                    for(i in seq_len(ng)) {
-                        res[[i]] <- ord + ss[i]
-                    }
-                    res <- cbindAllPerms(res)
-                    res[] <- obs[res]
-                }
-            }
+            allWithinPlots(obs, strataP, typeW, mirrorW, symmetricW,
+                           constantW, dimW, control)
         }
     }
-    ## Do we need to permute plots?
-    if (!is.null(strataP) && !isTRUE(all.equal(typeP, "none"))) {
-        ## permuting plots ONLY
-        if(typeW == "none") {
-            res <- allStrata(n, control = control)
-        } else {
-            ## FIXME - this need updating to work with the new code
-            ## permuting blocks AND within blocks
-            ## need a local CONTROL that just permutes blocks
-            controlP <- how(plots = Plots(strata = strataP, type = typeP),
-                            within = Within(type = "none", constant = constantW))
-            ## FIXME - the above should really only need to update
-            ## within as shown, not fiddle with Plots
 
-            ## number of permutations for just the block level
-            permP <- numPerms(n, control = controlP)
-            ## get all permutations for the block level
-            shuffP <- allStrata(n, control = controlP)
-            ## copy the set of permutations for within blocks
-            ## permP times - results is a list
-            resP <- rep(list(res), permP)
-            resP <- lapply(seq_along(resP),
-                            function(k, wi, bl) {
-                                t(apply(wi[[k]], 1,
-                                        function(x, bl, kk) {
-                                            x[bl[kk,]]
-                                        }, bl = bl, kk = k))
-                            },
-                            wi = resP, bl = shuffP)
-            res <- do.call(rbind, resP)
-        }
+    if (!is.null(strataP) && typeP != "none") {
+        res <- combineAllPlots(res, obs, typeW, typeP, constantW, control)
     }
-    ## some times storage.mode of res is numeric, sometimes
-    ## it is integer, set to "integer" for comparisons using
-    ## identical to match the observed ordering
+
+    ## Enumeration helpers can return doubles; indices are always integers.
     storage.mode(res) <- "integer"
-
-    ## return
     res
 }
 
-## enumerate all possible permutations for a more complicated
-## design
-## fac <- gl(2,6)
-##ctrl <- how(type = "grid", mirror = FALSE, strata = fac,
-##                    constant = TRUE, nrow = 3, ncol = 2)
-## ctrl <- how(strata = fac,
-##                     within = Within(type = "grid", mirror = FALSE,
-##                     constant = TRUE, nrow = 3, ncol = 2),
-##                     blocks = Blocks(type = "free"))
-## Nobs <- length(fac)
-## numPerms(seq_len(Nobs), control = ctrl)
-## numPerms(Nobs, control = ctrl) ## works just as well
-## (tmp <- allPerms(Nobs, control = ctrl, observed = TRUE))
-## (tmp2 <- allPerms(Nobs, control = ctrl))
+## Enumerate within-level permutations when no plot strata are present.
+`allWithin` <- function(obs, type, mirror, symmetric, dimensions, control) {
+    n <- length(obs)
+    out <- switch(
+        type,
+        free = allFree(n),
+        series = allSeries(
+            n, numPerms(n, control, check = FALSE), mirror
+        ),
+        grid = allGrid(
+            n, numPerms(n, control, check = FALSE),
+            dimensions[1L], dimensions[2L], mirror, symmetric
+        )
+    )
+    out[] <- obs[out]
+    out
+}
+
+## Enumerate within-level permutations separately for each plot stratum.
+`allWithinPlots` <- function(obs, strata, type, mirror, symmetric, constant,
+                             dimensions, control) {
+    sizes <- table(strata)
+    unique.sizes <- unique(sizes)
+    nplots <- length(sizes)
+    within.control <- how(within = getWithin(control))
+
+    if (constant) {
+        nperms <- numPerms(unique.sizes, within.control)
+        ordering <- switch(
+            type,
+            free = allFree(unique.sizes),
+            series = allSeries(unique.sizes, nperms, mirror),
+            grid = allGrid(unique.sizes, nperms, dimensions[1L],
+                           dimensions[2L], mirror, symmetric)
+        )
+        offsets <- seq(0, to = prod(unique.sizes, nplots - 1L),
+                       by = unique.sizes)
+        out <- lapply(offsets, function(offset) ordering + offset)
+        out <- do.call(cbind, out)
+    } else if (length(unique.sizes) > 1L) {
+        if (type == "grid")
+            stop("Unbalanced grid designs are not supported")
+
+        offsets <- c(0, cumsum(sizes)[seq_len(nplots - 1L)])
+        out <- vector(mode = "list", length = nplots)
+        for (i in seq_along(sizes)) {
+            nperms <- numPerms(sizes[i], within.control, check = FALSE)
+            ordering <- switch(
+                type,
+                free = allFree(sizes[i]),
+                series = allSeries(sizes[i], nperms, mirror)
+            )
+            out[[i]] <- ordering + offsets[i]
+        }
+        out <- cbindAllPerms(out)
+    } else {
+        nperms <- numPerms(unique.sizes, within.control, check = FALSE)
+        ordering <- switch(
+            type,
+            free = allFree(unique.sizes),
+            series = allSeries(unique.sizes, nperms, mirror),
+            grid = allGrid(unique.sizes, nperms, dimensions[1L],
+                           dimensions[2L], mirror, symmetric)
+        )
+        offsets <- seq(0, to = prod(unique.sizes, nplots - 1L),
+                       by = unique.sizes)
+        out <- lapply(offsets, function(offset) ordering + offset)
+        out <- cbindAllPerms(out)
+    }
+
+    out[] <- obs[out]
+    out
+}
+
+## Combine within-plot enumerations with every plot-level permutation.
+`combineAllPlots` <- function(within.perms, obs, within.type, plot.type,
+                              constant, control) {
+    n <- length(obs)
+    if (within.type == "none") {
+        out <- allStrata(n, control = control)
+        if (plot.type == "partition")
+            out[] <- obs[out]
+        return(out)
+    }
+
+    plot.control <- how(
+        plots = getPlots(control),
+        within = Within(type = "none", constant = constant)
+    )
+    nplot.perms <- numPerms(n, control = plot.control, check = FALSE)
+    plot.perms <- allStrata(n, control = plot.control)
+    out <- rep(list(within.perms), nplot.perms)
+    out <- lapply(
+        seq_along(out),
+        function(i, permutations, plots) {
+            t(apply(permutations[[i]], 1L, function(x) x[plots[i, ]]))
+        },
+        permutations = out,
+        plots = plot.perms
+    )
+    do.call(rbind, out)
+}

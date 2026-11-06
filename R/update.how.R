@@ -28,45 +28,32 @@
 #  4) Added this modification section to the copyright/licence header.
 #  5) Added code to preserve some components of the original object.
 
+#' @export
+#' @noRd
 `update.how` <- function (object, ..., evaluate = TRUE) {
-    call <- getCall(object)
-    if (is.null(call))
-        stop("need an object with call component")
     extras <- match.call(expand.dots = FALSE)$...
 
-    ## preserve or update block and/or plot  names
-    bname <- if ("blocks" %in% names(extras)) {
-        deparse(substitute(extras[["blocks"]]))
-    } else {
-        object$blocks.name
-    }
-    pname <- if ("plots" %in% names(extras)) {
-        dots <- list(...)
-        dots$plots$plots.name
-    } else {
-        object$plots$plots.name
-    }
+    ## Preserve names when blocks or plots are not part of the update. If
+    ## either is updated, their constructors recover the new expression name.
+    update.blocks <- "blocks" %in% names(extras)
+    update.plots <- "plots" %in% names(extras)
+    bname <- object$blocks.name
+    pname <- object$plots$plots.name
 
-    ## process remaining ... args
-    if (length(extras)) {
-        existing <- !is.na(match(names(extras), names(call)))
-        ## do these individually to allow NULL to remove entries.
-        for (a in names(extras)[existing])
-            call[[a]] <- extras[[a]]
-        if (any(!existing)) {
-            call <- c(as.list(call), extras[!existing])
-            call <- as.call(call)
-        }
-    }
+    object.call <- amendCall(object, extras)
 
     ## probably want to evaluate hence default is TRUE
     if (evaluate) {
-        out <- eval(call, parent.frame())
+        out <- eval(object.call, parent.frame())
         ## add back in the chars we discovered earlier
-        out$blocks.name <- bname
-        out$plots$plots.name <- pname
+        if (!update.blocks) {
+            out$blocks.name <- bname
+        }
+        if (!update.plots) {
+            out$plots$plots.name <- pname
+        }
     } else {
-        out <- call
+        out <- object.call
     }
 
     out

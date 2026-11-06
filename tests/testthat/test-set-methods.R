@@ -20,6 +20,7 @@ test_that("default methods for get functions", {
     expect_error(setDim(v) <- c(2,3), regexp = "No default method")
     expect_error(setType(v) <- "series", regexp = "No default method")
     expect_error(setMirror(v) <- TRUE, regexp = "No default method")
+    expect_error(setSymmetric(v) <- TRUE, regexp = "No default method")
     expect_error(setMake(v) <- TRUE, regexp = "No default method")
     expect_error(setConstant(v) <- "series", regexp = "No default method")
 })
@@ -28,6 +29,7 @@ test_that("how() set methods throw errors where not appropriate for use", {
     h <- how()
     expect_error(setDim(h) <- c(2,3), regexp = "can not be used directly on '\"how\"' objects")
     expect_error(setMirror(h) <- TRUE, regexp = "can not be used directly on '\"how\"' objects")
+    expect_error(setSymmetric(h) <- TRUE, regexp = "can not be used directly on '\"how\"' objects")
     expect_error(setConstant(h) <- TRUE, regexp = "can not be used directly on '\"how\"' objects")
     expect_error(setType(h) <- "series", regexp = "can not be used directly on '\"how\"' objects")
     expect_error(setRow(h) <- 2, regexp = "can not be used directly on '\"how\"' objects")
@@ -129,6 +131,8 @@ test_that("test setType<- works", {
     h <- how(within = Within(type = "grid", nrow = 5, ncol = 5),
              plots  =  Plots(type = "series", strata = f))
     w <- getWithin(h)
+    expect_error(setType(w) <- "partition",
+                 regexp = "Invalid permutation type")
     setType(w) <- "free"
     expect_is(w, "Within")
     expect_identical(getType(w), "free")

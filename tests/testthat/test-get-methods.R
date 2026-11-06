@@ -11,6 +11,7 @@ test_that("default methods for get functions", {
     expect_error(getStrata(v), regexp = "No default method")
     expect_error(getType(v), regexp = "No default method")
     expect_error(getMirror(v), regexp = "No default method")
+    expect_error(getSymmetric(v), regexp = "No default method")
     expect_error(getConstant(v), regexp = "No default method")
     expect_error(getNperm(v), regexp = "No default method")
     expect_error(getMaxperm(v), regexp = "No default method")
@@ -39,4 +40,12 @@ test_that("getHow works for check()", {
     expect_is(CTRL, "how")
     CTRL <- getHow(res)
     expect_is(CTRL, "how")
+})
+
+test_that("dimension getters have useful default methods", {
+    x <- matrix(seq_len(6), nrow = 2, ncol = 3)
+
+    expect_identical(getRow(x), 2L)
+    expect_identical(getCol(x), 3L)
+    expect_identical(getDim(x), c(2L, 3L))
 })

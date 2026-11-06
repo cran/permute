@@ -12,6 +12,10 @@ jack.t <- t.test(Length ~ Sex, data = jackal, var.equal = TRUE,
                  alternative = "greater")
 jack.t
 
+## ----ftest_jackal-------------------------------------------------------------
+var.test(Length ~ Sex, data = jackal)
+fligner.test(Length ~ Sex, data = jackal)
+
 ## ----meanFun------------------------------------------------------------------
 meanDif <- function(x, grp) {
   mean(x[grp == "Male"]) - mean(x[grp == "Female"])

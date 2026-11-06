@@ -1,4 +1,93 @@
-`numPerms` <- function(object, control = how()) {
+#' Number of possible permutations for a given object
+#'
+#' `numPerms` calculates the maximum number of permutations possible under
+#' the current permutation scheme.
+#'
+#' Function `numPerms` returns the number of permutations for the passed
+#' `object` and the selected permutation scheme. `object` can be one
+#' of a data frame, matrix, an object for which a scores method exists, or a
+#' numeric or integer vector. In the case of a numeric or integer vector, a
+#' vector of length 1 can be used and it will be expanded to a vector of length
+#' `object` (i.e., `1:object`) before computing the number of
+#' permutations. As such, `object` can be the number of observations not
+#' just the object containing the observations.
+#'
+#' For `Plots(type = "partition")`, if the group sizes are \eqn{n_1,
+#' \ldots, n_K}, the number of distinct assignments is \eqn{n! / \prod_k n_k!}.
+#' With blocks, this quantity is calculated within each block and the results
+#' are multiplied.
+#'
+#' @param object any object handled by [stats::nobs()].
+#' @param control a list of control values describing properties of the
+#' permutation design, as returned by a call to [how()].
+#' @param check logical; should `control` be checked for problems?
+#' @returns The (numeric) number of possible permutations of observations in
+#' `object`, or `Inf` if the count exceeds the range of a double.
+#' @note In general, mirroring `"series"` designs doubles the number of
+#' permutations and mirroring `"grid"` designs can quadruple it (within
+#' levels of strata if present). For grids with `symmetric = TRUE`, at most
+#' three orientations are included because simultaneous row and column
+#' mirroring is disallowed. Reflections of grid axes containing one or two
+#' cells are equivalent to toroidal shifts and do not add distinct
+#' permutations.
+#'
+#' Mirroring does not double the number of series permutations when the series
+#' contains only two observations.
+#'
+#' For example, with 2 observations there are 2 permutations for
+#' `"series"` designs:
+#'
+#' 1. 1-2, and
+#' 2. 2-1.
+#'
+#' If these two permutations were mirrored, we would have:
+#'
+#' 1. 2-1, and
+#' 2. 1-2.
+#'
+#' It is immediately clear that this is the same set of permutations without
+#' mirroring (if one reorders the rows).
+#' @author Gavin Simpson
+#' @seealso [shuffle()] and [how()]. Additional
+#' [stats::nobs()] methods are provided; see [nobs-methods].
+#' @examples
+#'
+#' ## permutation design --- see ?how
+#' ctrl <- how() ## defaults to freely exchangeable
+#'
+#' ## vector input
+#' v <- 1:10
+#' (obs <- nobs(v))
+#' numPerms(v, control = ctrl)
+#'
+#' ## integer input
+#' len <- length(v)
+#' (obs <- nobs(len))
+#' numPerms(len, control = ctrl)
+#'
+#' ## new design, objects are a time series
+#' ctrl <- how(within = Within(type = "series"))
+#' numPerms(v, control = ctrl)
+#' ## number of permutations possible drastically reduced...
+#' ## ...turn on mirroring
+#' ctrl <- how(within = Within(type = "series", mirror = TRUE))
+#' numPerms(v, control = ctrl)
+#'
+#' ## Try blocking --- 2 groups of 5
+#' bl <- numPerms(v, control = how(blocks = gl(2,5)))
+#' bl
+#'
+#' ## should be same as
+#' pl <- numPerms(v, control = how(plots = Plots(strata = gl(2,5))))
+#' pl
+#' stopifnot(all.equal(bl, pl))
+#'
+#' ## Distinct assignments to groups of sizes 3 and 2
+#' groups <- factor(c("a", "a", "a", "b", "b"))
+#' ctrl <- how(plots = Plots(groups, type = "partition"))
+#' numPerms(length(groups), control = ctrl) ## 10
+#'
+`numPerms` <- function(object, control = how(), check = TRUE) {
   ## constant holding types where something is permuted
   TYPES <- c("free","grid","series","none")
 
@@ -8,11 +97,18 @@
     object <- seq_len(object)
   ## number of observations in data
   n <- nobs(object)
+  checkPartitionDesign(control, n)
 
-  ## get the permutation levels from control
-  WI <- getWithin(control)
-  PL <- getPlots(control)
-  BL <- getBlocks(control)
+  # run check here unless instructed not to
+  if (isTRUE(check)) {
+    chk <- check(
+      object = object,
+      control = control,
+      quietly = TRUE,
+      num_perms = FALSE
+    )
+    control <- chk$control
+  }
 
   ## any strata to permute within / blocking?
   BLOCKS <- getStrata(control, which = "blocks")
@@ -23,30 +119,18 @@
   ## mirroring?
   mirrorP <- getMirror(control, which = "plots")
   mirrorW <- getMirror(control, which = "within")
+  symmetricP <- getSymmetric(control, which = "plots")
+  symmetricW <- getSymmetric(control, which = "within")
 
   ## constant - i.e. same perm within each plot?
   constantW <- getConstant(control)
 
   ## grid dimensions
-  colW <- getCol(control, which = "within")
-  colP <- getRow(control, which = "plots")
+  dimW <- getDim(control, which = "within")
+  dimP <- getDim(control, which = "plots")
 
-  ## Some checks; i) Plot strata must be of same size when permuting strata
-  ##                 or having the same constant permutation within strata
-  ##             ii) In grid designs, grids must be of the same size for all
-  ##                 strata
-  ##
-  ## FIXME - this probably should be in check()!
-  if(!is.null(PSTRATA)) {
+  if (!is.null(PSTRATA))
     tab <- table(PSTRATA)
-    same.n <- length(unique(tab))
-    if((typeP != "none" || isTRUE(constantW)) && same.n > 1) {
-      stop("All levels of strata must have same number of samples for chosen scheme")
-    }
-    if(typeP == "grid" && same.n > 1) {
-      stop("Unbalanced grid designs are not supported")
-    }
-  }
 
   ## the various designs allowed imply multipliers to number of samples
   ## for the restricted permutations
@@ -54,24 +138,24 @@
   mult.p <- mult.wi <- 1
 
   ## within types
-  if(typeW %in% c("series","grid")) {
+  if(typeW == "series") {
     mult.wi <- 2
-    if(isTRUE(all.equal(typeW, "grid")) && !is.null(colW) && colW > 2) {
-      mult.wi <- 4
-    } else {
-      if(isTRUE(all.equal(n, 2)))
-        mult.wi <- 1
-    }
+    if(n == 2L)
+      mult.wi <- 1
+  } else if(typeW == "grid") {
+    mult.wi <- gridOrientationMultiplier(dimW[1L], dimW[2L],
+                                         mirror = TRUE,
+                                         symmetric = symmetricW)
   }
   ## plot-level types
-  if(typeP %in% c("series","grid")) {
+  if(typeP == "series") {
     mult.p <- 2
-    if(isTRUE(all.equal(typeP, "grid")) && !is.null(colP) && colP > 2) {
-      mult.p <- 4
-    } else {
-      if(isTRUE(all.equal(length(tab), 2))) # was all.equal(n, 2)
-        mult.p <- 1
-    }
+    if(length(tab) == 2L)
+      mult.p <- 1
+  } else if(typeP == "grid") {
+    mult.p <- gridOrientationMultiplier(dimP[1L], dimP[2L],
+                                        mirror = TRUE,
+                                        symmetric = symmetricP)
   }
 
   ## within
@@ -113,7 +197,9 @@
     }
 
     ## plots
-    num.p <- if(isTRUE(all.equal(typeP, "free"))) {
+    num.p <- if(typeP == "partition") {
+        numPartitions(PSTRATA)
+    } else if(typeP == "free") {
         exp(lfactorial(length(levels(PSTRATA))))
     } else if(typeP %in% c("series", "grid")) {
         if(isTRUE(mirrorP)) {
@@ -125,16 +211,18 @@
         1
     }
 
-    num.wi <- if(isTRUE(all.equal(typeW, "none"))) {
+    num.wi <- if(typeW == "none") {
         ## no within permutations. note we multiply num.p by this
         ## values so it is 1 not 0!!
         1
-    } else if(isTRUE(all.equal(typeW, "free"))) {
+    } else if(typeW == "free") {
         if(!is.null(PSTRATA)) {
-            if(constantW) {
-                factorial(tab[1])
+            sizes <- if (constantW) tab[1L] else tab
+            ## 171! exceeds the range of a double.
+            if (any(sizes >= 171L)) {
+                Inf
             } else {
-                prod(factorial(tab))
+                prod(factorial(sizes))
             }
         } else {
             exp(lfactorial(n))

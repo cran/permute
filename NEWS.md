@@ -1,3 +1,84 @@
+# permute 0.10-0
+
+## New features
+
+* `Plots()` plot strata and `how()` blocks can now be specified using
+  one-sided formulas evaluated in a shared `data` frame. Multiple variables,
+  interactions, and nested terms are combined into a single grouping factor.
+  Resolves #38.
+
+* Grid permutation designs gain a `symmetric` option that prevents mirroring
+  in both spatial directions at the same time. Resolves #1.
+
+* `permute()` can now reuse a supplied matrix of permutation indices, and the
+  new `permutator()` function provides sequential access to either a supplied
+  or newly generated permutation set. Resolves #34.
+
+* New function `permutations()` applies a permutation design to the values in
+  an atomic vector and returns a matrix-like object with one permutation per
+  row. This addresses #35 and the original request in #33.
+
+* `Plots()` gains type `"partition"` for permuting group membership while
+  keeping the number of observations in each group fixed.
+
+* When permuting plots, balance is now only required *within* blocks. Requested
+  by @dbaranger in #27
+
+* `numPerms()` gains argument `check` that works analogously to the same
+  argument of `allPerms()` to request or suppress checking of the permutation
+  design when computing the number of permutations. Users should not normally
+  need to touch this default of `TRUE`.
+
+* `check()` gains argument `num_perms` to request or suppress the computing of
+  the number of possible permutations for the current design. The default is
+  `TRUE`, meaning the number of permutations is computed.
+
+* *permute* now uses the *roxygen* system for documentation and building `.Rd`
+  manual files.
+
+## Bug fixes
+
+* Within-plot permutation counts that overflow now return `Inf` without
+  factorial warnings. `allPerms()` rejects counts of `Inf` even when
+  `maxperm = Inf`. Resolves #21.
+
+* Namespace-qualified calls to `how()`, `Within()`, and `Plots()` now retain
+  valid constructor calls, fixing failures in `update()` and `shuffle()`.
+  Resolves #43.
+
+* `allPerms()` now records the number of returned permutations in the
+  attached control object after applying the `observed` setting.
+
+* `Plots()` and `Within()` now preserve explicit `NULL` arguments when storing
+  their matched calls, allowing later positional arguments and `update()` to
+  work correctly.
+
+* Formula objects supplied to `how(blocks = ...)` through local variables are
+  now retained in the matched call, allowing the design to be updated after
+  the variable has left scope.
+
+* Replacing the plots in a `how` object with a formula-built `Plots` object no
+  longer leaves a nested `data` argument that prevents subsequent updates.
+
+* Complete enumeration of grid permutations no longer treats two-column grids
+  as flattened series, which generated permutations that were not valid
+  two-dimensional toroidal shifts. Reflections of grid axes containing one or
+  two cells are also no longer counted as distinct when they duplicate an
+  ordinary toroidal shift. `allPerms()` and `numPerms()` now return consistent,
+  distinct grid permutations in these cases.
+
+* `check()` would fail all permutation designs where the (whole) plots were
+  permuted with toroidal grid shifts. #42 Reported and fixed by @sims1253
+
+## Maintenance
+
+* Removed the obsolete `Blocks()` compatibility helper and its documentation.
+  This is the only public API removal in this release.
+
+* Simplified complete permutation enumeration and control accessors by
+  removing unreachable compatibility code, unused arguments, and duplicate
+  validation while preserving permutation order and seeded RNG behaviour.
+
 # permute 0.9-10
 
 ## User visible changes
@@ -15,7 +96,7 @@
 
 # permute 0.9-7
 
-### Bug fixes
+## Bug fixes
 
 * The documented behaviour of `shuffleFree()` allowed `shuffleFree(x = 1:10)`,
   with `x` passed immediately to `sample.int()`, which is incorrect and raises
@@ -24,7 +105,7 @@
 
 # permute 0.9-6
 
-### Bug fixes
+## Bug fixes
 
 * `allPerms()` was calling `allSeries()` with the incorrect number of
   permutations, leading to problems with `shuffleSet()` also.

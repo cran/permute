@@ -1,7 +1,7 @@
 
-R version 4.5.0 (2025-04-11) -- "How About a Twenty-Six"
-Copyright (C) 2025 The R Foundation for Statistical Computing
-Platform: aarch64-apple-darwin20
+R version 4.6.1 (2026-06-24) -- "Happy Hop"
+Copyright (C) 2026 The R Foundation for Statistical Computing
+Platform: aarch64-apple-darwin23
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -37,6 +37,7 @@ Type 'q()' to quit R.
 > 
 > ### ** Examples
 > 
+> 
 > ## allPerms can work with a vector
 > vec <- c(3,4,5)
 > allPerms(vec) ## free permutation
@@ -58,19 +59,19 @@ Type 'q()' to quit R.
 [1] 6
 > (tmp <- allPerms(Nobs, control = update(ctrl, observed = TRUE)))
      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
-[1,]    2    3    4    5    6    1    8    9   10    11    12     7
-[2,]    3    4    5    6    1    2    9   10   11    12     7     8
-[3,]    4    5    6    1    2    3   10   11   12     7     8     9
-[4,]    5    6    1    2    3    4   11   12    7     8     9    10
-[5,]    6    1    2    3    4    5   12    7    8     9    10    11
+[1,]    5    6    4    2    3    1   11   12   10     8     9     7
+[2,]    2    3    1    5    6    4    8    9    7    11    12    10
+[3,]    6    4    5    3    1    2   12   10   11     9     7     8
+[4,]    3    1    2    6    4    5    9    7    8    12    10    11
+[5,]    4    5    6    1    2    3   10   11   12     7     8     9
 [6,]    1    2    3    4    5    6    7    8    9    10    11    12
 > (tmp2 <- allPerms(Nobs, control = ctrl))
      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
-[1,]    2    3    4    5    6    1    8    9   10    11    12     7
-[2,]    3    4    5    6    1    2    9   10   11    12     7     8
-[3,]    4    5    6    1    2    3   10   11   12     7     8     9
-[4,]    5    6    1    2    3    4   11   12    7     8     9    10
-[5,]    6    1    2    3    4    5   12    7    8     9    10    11
+[1,]    5    6    4    2    3    1   11   12   10     8     9     7
+[2,]    2    3    1    5    6    4    8    9    7    11    12    10
+[3,]    6    4    5    3    1    2   12   10   11     9     7     8
+[4,]    3    1    2    6    4    5    9    7    8    12    10    11
+[5,]    4    5    6    1    2    3   10   11   12     7     8     9
 > 
 > ## turn on mirroring
 > ##ctrl$within$mirror <- TRUE
@@ -79,31 +80,31 @@ Type 'q()' to quit R.
 [1] 12
 > (tmp3 <- allPerms(Nobs, control = update(ctrl, observed = TRUE)))
       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
- [1,]    2    3    4    5    6    1    8    9   10    11    12     7
- [2,]    3    4    5    6    1    2    9   10   11    12     7     8
- [3,]    4    5    6    1    2    3   10   11   12     7     8     9
- [4,]    5    6    1    2    3    4   11   12    7     8     9    10
- [5,]    6    1    2    3    4    5   12    7    8     9    10    11
+ [1,]    5    6    4    2    3    1   11   12   10     8     9     7
+ [2,]    2    3    1    5    6    4    8    9    7    11    12    10
+ [3,]    6    4    5    3    1    2   12   10   11     9     7     8
+ [4,]    3    1    2    6    4    5    9    7    8    12    10    11
+ [5,]    4    5    6    1    2    3   10   11   12     7     8     9
  [6,]    1    2    3    4    5    6    7    8    9    10    11    12
- [7,]    1    6    5    4    3    2    7   12   11    10     9     8
- [8,]    2    1    6    5    4    3    8    7   12    11    10     9
- [9,]    3    2    1    6    5    4    9    8    7    12    11    10
-[10,]    4    3    2    1    6    5   10    9    8     7    12    11
-[11,]    5    4    3    2    1    6   11   10    9     8     7    12
-[12,]    6    5    4    3    2    1   12   11   10     9     8     7
+ [7,]    4    6    5    1    3    2   10   12   11     7     9     8
+ [8,]    1    3    2    4    6    5    7    9    8    10    12    11
+ [9,]    5    4    6    2    1    3   11   10   12     8     7     9
+[10,]    2    1    3    5    4    6    8    7    9    11    10    12
+[11,]    6    5    4    3    2    1   12   11   10     9     8     7
+[12,]    3    2    1    6    5    4    9    8    7    12    11    10
 > (tmp4 <- allPerms(Nobs, control = ctrl))
       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
- [1,]    2    3    4    5    6    1    8    9   10    11    12     7
- [2,]    3    4    5    6    1    2    9   10   11    12     7     8
- [3,]    4    5    6    1    2    3   10   11   12     7     8     9
- [4,]    5    6    1    2    3    4   11   12    7     8     9    10
- [5,]    6    1    2    3    4    5   12    7    8     9    10    11
- [6,]    1    6    5    4    3    2    7   12   11    10     9     8
- [7,]    2    1    6    5    4    3    8    7   12    11    10     9
- [8,]    3    2    1    6    5    4    9    8    7    12    11    10
- [9,]    4    3    2    1    6    5   10    9    8     7    12    11
-[10,]    5    4    3    2    1    6   11   10    9     8     7    12
-[11,]    6    5    4    3    2    1   12   11   10     9     8     7
+ [1,]    5    6    4    2    3    1   11   12   10     8     9     7
+ [2,]    2    3    1    5    6    4    8    9    7    11    12    10
+ [3,]    6    4    5    3    1    2   12   10   11     9     7     8
+ [4,]    3    1    2    6    4    5    9    7    8    12    10    11
+ [5,]    4    5    6    1    2    3   10   11   12     7     8     9
+ [6,]    4    6    5    1    3    2   10   12   11     7     9     8
+ [7,]    1    3    2    4    6    5    7    9    8    10    12    11
+ [8,]    5    4    6    2    1    3   11   10   12     8     7     9
+ [9,]    2    1    3    5    4    6    8    7    9    11    10    12
+[10,]    6    5    4    3    2    1   12   11   10     9     8     7
+[11,]    3    2    1    6    5    4    9    8    7    12    11    10
 > 
 > ## prints out details of the permutation scheme as
 > ## well as the matrix of permutations
@@ -125,10 +126,11 @@ Within Plots:
   Permutation type: grid
   Mirrored?: Yes
   Different permutation within each Plot?: No
+  Symmetric?: No
   Grid dimensions: 3 rows 2 cols
 
 Permutation details:
-  Number of permutations: 199
+  Number of permutations: 12
   Max. number of permutations allowed: 9999
   Evaluate all permutations?: No.  Activation limit: 5040
 
@@ -136,18 +138,18 @@ All permutations:
 Contains observed ordering?: Yes 
 
       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
- [1,]    2    3    4    5    6    1    8    9   10    11    12     7
- [2,]    3    4    5    6    1    2    9   10   11    12     7     8
- [3,]    4    5    6    1    2    3   10   11   12     7     8     9
- [4,]    5    6    1    2    3    4   11   12    7     8     9    10
- [5,]    6    1    2    3    4    5   12    7    8     9    10    11
+ [1,]    5    6    4    2    3    1   11   12   10     8     9     7
+ [2,]    2    3    1    5    6    4    8    9    7    11    12    10
+ [3,]    6    4    5    3    1    2   12   10   11     9     7     8
+ [4,]    3    1    2    6    4    5    9    7    8    12    10    11
+ [5,]    4    5    6    1    2    3   10   11   12     7     8     9
  [6,]    1    2    3    4    5    6    7    8    9    10    11    12
- [7,]    1    6    5    4    3    2    7   12   11    10     9     8
- [8,]    2    1    6    5    4    3    8    7   12    11    10     9
- [9,]    3    2    1    6    5    4    9    8    7    12    11    10
-[10,]    4    3    2    1    6    5   10    9    8     7    12    11
-[11,]    5    4    3    2    1    6   11   10    9     8     7    12
-[12,]    6    5    4    3    2    1   12   11   10     9     8     7
+ [7,]    4    6    5    1    3    2   10   12   11     7     9     8
+ [8,]    1    3    2    4    6    5    7    9    8    10    12    11
+ [9,]    5    4    6    2    1    3   11   10   12     8     7     9
+[10,]    2    1    3    5    4    6    8    7    9    11    10    12
+[11,]    6    5    4    3    2    1   12   11   10     9     8     7
+[12,]    3    2    1    6    5    4    9    8    7    12    11    10
 > summary(tmp4)
 
 	Complete enumeration of permutations
@@ -166,10 +168,11 @@ Within Plots:
   Permutation type: grid
   Mirrored?: Yes
   Different permutation within each Plot?: No
+  Symmetric?: No
   Grid dimensions: 3 rows 2 cols
 
 Permutation details:
-  Number of permutations: 198
+  Number of permutations: 11
   Max. number of permutations allowed: 9999
   Evaluate all permutations?: No.  Activation limit: 5040
 
@@ -177,17 +180,18 @@ All permutations:
 Contains observed ordering?: No 
 
       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
- [1,]    2    3    4    5    6    1    8    9   10    11    12     7
- [2,]    3    4    5    6    1    2    9   10   11    12     7     8
- [3,]    4    5    6    1    2    3   10   11   12     7     8     9
- [4,]    5    6    1    2    3    4   11   12    7     8     9    10
- [5,]    6    1    2    3    4    5   12    7    8     9    10    11
- [6,]    1    6    5    4    3    2    7   12   11    10     9     8
- [7,]    2    1    6    5    4    3    8    7   12    11    10     9
- [8,]    3    2    1    6    5    4    9    8    7    12    11    10
- [9,]    4    3    2    1    6    5   10    9    8     7    12    11
-[10,]    5    4    3    2    1    6   11   10    9     8     7    12
-[11,]    6    5    4    3    2    1   12   11   10     9     8     7
+ [1,]    5    6    4    2    3    1   11   12   10     8     9     7
+ [2,]    2    3    1    5    6    4    8    9    7    11    12    10
+ [3,]    6    4    5    3    1    2   12   10   11     9     7     8
+ [4,]    3    1    2    6    4    5    9    7    8    12    10    11
+ [5,]    4    5    6    1    2    3   10   11   12     7     8     9
+ [6,]    4    6    5    1    3    2   10   12   11     7     9     8
+ [7,]    1    3    2    4    6    5    7    9    8    10    12    11
+ [8,]    5    4    6    2    1    3   11   10   12     8     7     9
+ [9,]    2    1    3    5    4    6    8    7    9    11    10    12
+[10,]    6    5    4    3    2    1   12   11   10     9     8     7
+[11,]    3    2    1    6    5    4    9    8    7    12    11    10
+> 
 > 
 > 
 > 
@@ -200,9 +204,10 @@ Contains observed ordering?: No
 > ### Name: check
 > ### Title: Utility functions for permutation schemes
 > ### Aliases: check print.check print.summary.check summary.check
-> ### Keywords: utilities design methods
+> ### Keywords: design methods utilities
 > 
 > ### ** Examples
+> 
 > 
 > ## only run this example if vegan is available
 > if (suppressPackageStartupMessages(require("vegan"))) {
@@ -216,35 +221,35 @@ Contains observed ordering?: No
 +     CONTROL <- how(within = Within(type = "free"))
 +     (check1 <- check(pyrifos, CONTROL))
 +     ## summary(check1)
-+     
++ 
 +     ## no strata but data are series with no mirroring, so 132 permutations
 +     CONTROL <- how(within = Within(type = "series", mirror = FALSE))
 +     check(pyrifos, CONTROL)
-+     
++ 
 +     ## no strata but data are series with mirroring, so 264 permutations
 +     CONTROL <- how(within = Within(type = "series", mirror = TRUE))
 +     check(pyrifos, control = CONTROL)
-+     
++ 
 +     ## unrestricted within strata
 +     check(pyrifos, control = how(plots = Plots(strata = ditch),
 +                    within = Within(type = "free")))
-+     
++ 
 +     ## time series within strata, no mirroring
 +     check(pyrifos,
 +           control = how(plots = Plots(strata = ditch),
 +           within = Within(type = "series", mirror = FALSE)))
-+     
++ 
 +     ## time series within strata, with mirroring
 +     check(pyrifos,
 +           control = how(plots = Plots(strata = ditch),
 +           within = Within(type = "series", mirror = TRUE)))
-+     
++ 
 +     ## time series within strata, no mirroring, same permutation
 +     ## within strata
 +     check(pyrifos,
 +           control = how(plots = Plots(strata = ditch),
 +           within = Within(type = "series", constant = TRUE)))
-+     
++ 
 +     ## time series within strata, with mirroring, same permutation
 +     ## within strata
 +     check(pyrifos,
@@ -271,7 +276,7 @@ Set of permutations < 'minperm'. Generating entire set.
 'nperm' >= set of all permutations: complete enumeration.
 Set of permutations < 'minperm'. Generating entire set.
 [1] 479001600
->     
+> 
 > ## this should also also for arbitrary vectors
 > vec1 <- check(1:100)
 > vec2 <- check(1:100, how())
@@ -302,19 +307,19 @@ Set of permutations < 'minperm'. Generating entire set.
 [1] 6
 > (tmp <- allPerms(12, control = update(ctrl, observed = TRUE)))
      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
-[1,]    2    3    4    5    6    1    8    9   10    11    12     7
-[2,]    3    4    5    6    1    2    9   10   11    12     7     8
-[3,]    4    5    6    1    2    3   10   11   12     7     8     9
-[4,]    5    6    1    2    3    4   11   12    7     8     9    10
-[5,]    6    1    2    3    4    5   12    7    8     9    10    11
+[1,]    5    6    4    2    3    1   11   12   10     8     9     7
+[2,]    2    3    1    5    6    4    8    9    7    11    12    10
+[3,]    6    4    5    3    1    2   12   10   11     9     7     8
+[4,]    3    1    2    6    4    5    9    7    8    12    10    11
+[5,]    4    5    6    1    2    3   10   11   12     7     8     9
 [6,]    1    2    3    4    5    6    7    8    9    10    11    12
 > (tmp2 <- allPerms(12, control = ctrl))
      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
-[1,]    2    3    4    5    6    1    8    9   10    11    12     7
-[2,]    3    4    5    6    1    2    9   10   11    12     7     8
-[3,]    4    5    6    1    2    3   10   11   12     7     8     9
-[4,]    5    6    1    2    3    4   11   12    7     8     9    10
-[5,]    6    1    2    3    4    5   12    7    8     9    10    11
+[1,]    5    6    4    2    3    1   11   12   10     8     9     7
+[2,]    2    3    1    5    6    4    8    9    7    11    12    10
+[3,]    6    4    5    3    1    2   12   10   11     9     7     8
+[4,]    3    1    2    6    4    5    9    7    8    12    10    11
+[5,]    4    5    6    1    2    3   10   11   12     7     8     9
 > 
 > ## turn on mirroring
 > ctrl <- update(ctrl, within = update(getWithin(ctrl), mirror = TRUE))
@@ -322,31 +327,31 @@ Set of permutations < 'minperm'. Generating entire set.
 [1] 12
 > (tmp3 <- allPerms(12, control = update(ctrl, observed = TRUE)))
       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
- [1,]    2    3    4    5    6    1    8    9   10    11    12     7
- [2,]    3    4    5    6    1    2    9   10   11    12     7     8
- [3,]    4    5    6    1    2    3   10   11   12     7     8     9
- [4,]    5    6    1    2    3    4   11   12    7     8     9    10
- [5,]    6    1    2    3    4    5   12    7    8     9    10    11
+ [1,]    5    6    4    2    3    1   11   12   10     8     9     7
+ [2,]    2    3    1    5    6    4    8    9    7    11    12    10
+ [3,]    6    4    5    3    1    2   12   10   11     9     7     8
+ [4,]    3    1    2    6    4    5    9    7    8    12    10    11
+ [5,]    4    5    6    1    2    3   10   11   12     7     8     9
  [6,]    1    2    3    4    5    6    7    8    9    10    11    12
- [7,]    1    6    5    4    3    2    7   12   11    10     9     8
- [8,]    2    1    6    5    4    3    8    7   12    11    10     9
- [9,]    3    2    1    6    5    4    9    8    7    12    11    10
-[10,]    4    3    2    1    6    5   10    9    8     7    12    11
-[11,]    5    4    3    2    1    6   11   10    9     8     7    12
-[12,]    6    5    4    3    2    1   12   11   10     9     8     7
+ [7,]    4    6    5    1    3    2   10   12   11     7     9     8
+ [8,]    1    3    2    4    6    5    7    9    8    10    12    11
+ [9,]    5    4    6    2    1    3   11   10   12     8     7     9
+[10,]    2    1    3    5    4    6    8    7    9    11    10    12
+[11,]    6    5    4    3    2    1   12   11   10     9     8     7
+[12,]    3    2    1    6    5    4    9    8    7    12    11    10
 > (tmp4 <- allPerms(12, control = ctrl))
       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
- [1,]    2    3    4    5    6    1    8    9   10    11    12     7
- [2,]    3    4    5    6    1    2    9   10   11    12     7     8
- [3,]    4    5    6    1    2    3   10   11   12     7     8     9
- [4,]    5    6    1    2    3    4   11   12    7     8     9    10
- [5,]    6    1    2    3    4    5   12    7    8     9    10    11
- [6,]    1    6    5    4    3    2    7   12   11    10     9     8
- [7,]    2    1    6    5    4    3    8    7   12    11    10     9
- [8,]    3    2    1    6    5    4    9    8    7    12    11    10
- [9,]    4    3    2    1    6    5   10    9    8     7    12    11
-[10,]    5    4    3    2    1    6   11   10    9     8     7    12
-[11,]    6    5    4    3    2    1   12   11   10     9     8     7
+ [1,]    5    6    4    2    3    1   11   12   10     8     9     7
+ [2,]    2    3    1    5    6    4    8    9    7    11    12    10
+ [3,]    6    4    5    3    1    2   12   10   11     9     7     8
+ [4,]    3    1    2    6    4    5    9    7    8    12    10    11
+ [5,]    4    5    6    1    2    3   10   11   12     7     8     9
+ [6,]    4    6    5    1    3    2   10   12   11     7     9     8
+ [7,]    1    3    2    4    6    5    7    9    8    10    12    11
+ [8,]    5    4    6    2    1    3   11   10   12     8     7     9
+ [9,]    2    1    3    5    4    6    8    7    9    11    10    12
+[10,]    6    5    4    3    2    1   12   11   10     9     8     7
+[11,]    3    2    1    6    5    4    9    8    7    12    11    10
 > ## prints out details of the permutation scheme as
 > ## well as the matrix of permutations
 > summary(tmp)
@@ -367,10 +372,11 @@ Within Plots:
   Permutation type: grid
   Mirrored?: No
   Different permutation within each Plot?: No
+  Symmetric?: No
   Grid dimensions: 3 rows 2 cols
 
 Permutation details:
-  Number of permutations: 199
+  Number of permutations: 6
   Max. number of permutations allowed: 9999
   Evaluate all permutations?: No.  Activation limit: 5040
 
@@ -378,11 +384,11 @@ All permutations:
 Contains observed ordering?: Yes 
 
      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
-[1,]    2    3    4    5    6    1    8    9   10    11    12     7
-[2,]    3    4    5    6    1    2    9   10   11    12     7     8
-[3,]    4    5    6    1    2    3   10   11   12     7     8     9
-[4,]    5    6    1    2    3    4   11   12    7     8     9    10
-[5,]    6    1    2    3    4    5   12    7    8     9    10    11
+[1,]    5    6    4    2    3    1   11   12   10     8     9     7
+[2,]    2    3    1    5    6    4    8    9    7    11    12    10
+[3,]    6    4    5    3    1    2   12   10   11     9     7     8
+[4,]    3    1    2    6    4    5    9    7    8    12    10    11
+[5,]    4    5    6    1    2    3   10   11   12     7     8     9
 [6,]    1    2    3    4    5    6    7    8    9    10    11    12
 > summary(tmp2)
 
@@ -402,10 +408,11 @@ Within Plots:
   Permutation type: grid
   Mirrored?: No
   Different permutation within each Plot?: No
+  Symmetric?: No
   Grid dimensions: 3 rows 2 cols
 
 Permutation details:
-  Number of permutations: 198
+  Number of permutations: 5
   Max. number of permutations allowed: 9999
   Evaluate all permutations?: No.  Activation limit: 5040
 
@@ -413,11 +420,11 @@ All permutations:
 Contains observed ordering?: No 
 
      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
-[1,]    2    3    4    5    6    1    8    9   10    11    12     7
-[2,]    3    4    5    6    1    2    9   10   11    12     7     8
-[3,]    4    5    6    1    2    3   10   11   12     7     8     9
-[4,]    5    6    1    2    3    4   11   12    7     8     9    10
-[5,]    6    1    2    3    4    5   12    7    8     9    10    11
+[1,]    5    6    4    2    3    1   11   12   10     8     9     7
+[2,]    2    3    1    5    6    4    8    9    7    11    12    10
+[3,]    6    4    5    3    1    2   12   10   11     9     7     8
+[4,]    3    1    2    6    4    5    9    7    8    12    10    11
+[5,]    4    5    6    1    2    3   10   11   12     7     8     9
 > 
 > ## different numbers of observations per level of strata
 > fac <- factor(rep(1:3, times = c(3,2,2)))
@@ -471,6 +478,7 @@ Contains observed ordering?: No
 > 
 > 
 > 
+> 
 > cleanEx()
 
 detaching ‘package:vegan’
@@ -482,31 +490,27 @@ detaching ‘package:vegan’
 > 
 > ### Name: get-methods
 > ### Title: Extractor functions to access components of a permutation design
-> ### Aliases: get-methods getBlocks getBlocks.default getBlocks.how
-> ###   getBlocks.permControl getWithin getWithin.default getWithin.how
-> ###   getWithin.permControl getStrata getStrata.default getStrata.how
-> ###   getStrata.permControl getStrata.Plots getType getType.default
-> ###   getType.how getType.permControl getType.Plots getType.Within
-> ###   getMirror getMirror.default getMirror.how getMirror.permControl
-> ###   getMirror.Plots getMirror.Within getConstant getConstant.default
-> ###   getConstant.how getConstant.permControl getConstant.Within getPlots
-> ###   getPlots.default getPlots.how getPlots.permControl getRow
-> ###   getRow.default getRow.how getRow.permControl getRow.Plots
-> ###   getRow.Within getCol getCol.default getCol.how getCol.permControl
-> ###   getCol.Plots getCol.Within getDim getDim.default getDim.how
-> ###   getDim.permControl getDim.Plots getDim.Within getNperm
-> ###   getNperm.default getNperm.how getNperm.permControl getMaxperm
-> ###   getMaxperm.default getMaxperm.how getMaxperm.permControl getMinperm
-> ###   getMinperm.default getMinperm.how getMinperm.permControl getComplete
-> ###   getComplete.default getComplete.how getComplete.permControl getMake
-> ###   getMake.default getMake.how getObserved getObserved.default
-> ###   getObserved.how getAllperms getAllperms.default getAllperms.how
-> ###   getControl getHow getControl.default getControl.allPerms
+> ### Aliases: get-methods getBlocks.default getWithin.default
+> ###   getStrata.default getType.default getMirror.default
+> ###   getSymmetric.default getConstant.default getPlots.default
+> ###   getRow.default getCol.default getDim.default getNperm.default
+> ###   getMaxperm.default getMinperm.default getComplete.default
+> ###   getMake.default getObserved.default getAllperms.default
+> ###   getControl.default getAllperms getBlocks getComplete getConstant
+> ###   getCol getDim getMake getMaxperm getMinperm getMirror getSymmetric
+> ###   getNperm getObserved getPlots getRow getStrata getType getWithin
+> ###   getControl getHow getAllperms.how getBlocks.how getCol.how
+> ###   getCol.Plots getCol.Within getComplete.how getConstant.how
+> ###   getConstant.Within getDim.how getDim.Plots getDim.Within getMake.how
+> ###   getMaxperm.how getMinperm.how getMirror.how getMirror.Plots
+> ###   getMirror.Within getSymmetric.how getNperm.how getSymmetric.Plots
+> ###   getObserved.how getPlots.how getSymmetric.Within getRow.how
+> ###   getRow.Plots getRow.Within getStrata.how getStrata.Plots getType.how
+> ###   getType.Plots getType.Within getWithin.how getControl.allPerms
 > ### Keywords: methods utils
 > 
 > ### ** Examples
 > 
-> ## extract components from a "how" object
 > hh <- how()
 > getWithin(hh)
 $type
@@ -516,6 +520,9 @@ $constant
 [1] FALSE
 
 $mirror
+[1] FALSE
+
+$symmetric
 [1] FALSE
 
 $ncol
@@ -542,10 +549,11 @@ attr(,"class")
 > 
 > ### Name: how
 > ### Title: How to define a permutation design?
-> ### Aliases: how print.how Blocks Within Plots
+> ### Aliases: how print.how Within Plots
 > ### Keywords: utils
 > 
 > ### ** Examples
+> 
 > 
 > ## Set up factors for the Plots and Blocks
 > plts <- gl(4, 10) ## 4 Plots of 10 samples each
@@ -605,6 +613,61 @@ Permutation details:
   Max. number of permutations allowed: 9999
   Evaluate all permutations?: No.  Activation limit: 5040
 > 
+> ## Random assignments to groups of fixed size
+> groups <- factor(c("a", "a", "a", "b", "b"))
+> (h2 <- how(plots = Plots(strata = groups, type = "partition")))
+
+Permutation Design:
+
+Blocks:
+  Defined by: none
+
+Plots:
+  Plots: groups
+  Permutation type: partition
+  Group sizes: 3, 2
+  Within-group order retained
+
+Within Plots:
+  Permutation type: none
+
+Permutation details:
+  Number of permutations: 199
+  Max. number of permutations allowed: 9999
+  Evaluate all permutations?: No.  Activation limit: 5040
+> shuffle(length(groups), control = h2)
+[1] 4 1 2 3 5
+> 
+> ## Formula interfaces use a single data frame
+> dat <- data.frame(
++     block = gl(2, 6),
++     site = gl(3, 2, 12),
++     plot = gl(2, 1, 12)
++ )
+> how(plots = Plots(strata = ~ site / plot), blocks = ~ block, data = dat)
+
+Permutation Design:
+
+Blocks:
+  Blocks: block
+
+Plots:
+  Plots: site/plot
+  Permutation type: none
+  Mirrored?: No
+
+Within Plots:
+  Permutation type: free
+
+Permutation details:
+  Number of permutations: 199
+  Max. number of permutations allowed: 9999
+  Evaluate all permutations?: No.  Activation limit: 5040
+> getStrata(Plots(strata = ~ site / plot, data = dat))
+ [1] 1.1 1.2 2.1 2.2 3.1 3.2 1.1 1.2 2.1 2.2 3.1 3.2
+Levels: 1.1 2.1 3.1 1.2 2.2 3.2
+> 
+> 
 > 
 > 
 > cleanEx()
@@ -640,7 +703,7 @@ Permutation details:
 > ### Name: nobs-methods
 > ### Title: Number of observations in a given object
 > ### Aliases: nobs-methods nobs.numeric nobs.integer nobs.matrix
-> ###   nobs.data.frame nobs.factor nobs.character
+> ###   nobs.data.frame nobs.character nobs.factor
 > 
 > ### ** Examples
 > 
@@ -665,7 +728,6 @@ Permutation details:
 > 
 > 
 > 
-> 
 > cleanEx()
 > nameEx("numPerms")
 > ### * numPerms
@@ -677,6 +739,7 @@ Permutation details:
 > ### Aliases: numPerms
 > 
 > ### ** Examples
+> 
 > 
 > ## permutation design --- see ?how
 > ctrl <- how() ## defaults to freely exchangeable
@@ -716,6 +779,103 @@ Permutation details:
 [1] 14400
 > stopifnot(all.equal(bl, pl))
 > 
+> ## Distinct assignments to groups of sizes 3 and 2
+> groups <- factor(c("a", "a", "a", "b", "b"))
+> ctrl <- how(plots = Plots(groups, type = "partition"))
+> numPerms(length(groups), control = ctrl) ## 10
+[1] 10
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("partitions")
+> ### * partitions
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: partitions
+> ### Title: Generate random assignments to groups of fixed size
+> ### Aliases: allPartitions shufflePartition shufflePartitionSet
+> ### Keywords: design
+> 
+> ### ** Examples
+> 
+> groups <- factor(c("a", "a", "a", "b", "b"))
+> 
+> ## One of 5! / (3! 2!) = 10 assignments
+> set.seed(1)
+> (p <- shufflePartition(groups))
+[1] 4 1 2 3 5
+> groups[p]
+[1] b a a a b
+Levels: a b
+> 
+> ## A set of random assignments
+> shufflePartitionSet(groups, nset = 5, check = FALSE)
+No. of Permutations: 5
+No. of Samples: 5 (Nested in: plots; Random assignment)
+Restricted by Plots: strata (2 plots; Random assignment to groups)
+
+   1 2 3 4 5
+p1 1 2 4 3 5
+p2 1 4 5 2 3
+p3 1 2 3 4 5
+p4 4 1 5 2 3
+p5 4 1 5 2 3
+> 
+> ## Complete enumeration, excluding the observed assignment by default
+> allPartitions(groups)
+      [,1] [,2] [,3] [,4] [,5]
+ [1,]    1    2    4    3    5
+ [2,]    1    2    4    5    3
+ [3,]    1    4    2    3    5
+ [4,]    1    4    2    5    3
+ [5,]    1    4    5    2    3
+ [6,]    4    1    2    3    5
+ [7,]    4    1    2    5    3
+ [8,]    4    1    5    2    3
+ [9,]    4    5    1    2    3
+> 
+> 
+> 
+> cleanEx()
+> nameEx("permutations")
+> ### * permutations
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: permutations
+> ### Title: Permute a vector of data
+> ### Aliases: permutations print.permutations as.matrix.permutations
+> 
+> ### ** Examples
+> 
+> ## Don't show: 
+> suppressWarnings(RNGversion("3.5.0"))
+> ## End(Don't show)
+> set.seed(1)
+> permutations(letters[1:5], nset = 3, check = FALSE)
+No. of Permutations: 3
+No. of Samples: 5 (Randomised)
+
+   1   2   3   4   5  
+p1 "b" "e" "d" "c" "a"
+p2 "e" "d" "b" "c" "a"
+p3 "b" "a" "c" "d" "e"
+> 
+> ## Restricted permutations of data from a time series
+> control <- how(within = Within(type = "series"))
+> permutations(c(10, 20, 30, 40, 50), nset = 3,
++              control = control, check = FALSE)
+No. of Permutations: 3
+No. of Samples: 5 (Sequence)
+
+    1  2  3  4  5
+p1 40 50 10 20 30
+p2 50 10 20 30 40
+p3 10 20 30 40 50
+> 
 > 
 > 
 > cleanEx()
@@ -726,30 +886,29 @@ Permutation details:
 > 
 > ### Name: set-methods
 > ### Title: Replacement functions to set components of a permutation design
-> ### Aliases: set-methods setBlocks<- setBlocks<-.default setBlocks<-.how
-> ###   setBlocks<-.permControl setWithin<- setWithin<-.default
-> ###   setWithin<-.how setStrata<- setStrata<-.default setStrata<-.how
-> ###   setStrata<-.Plots setType<- setType<-.default setType<-.how
-> ###   setType<-.Plots setType<-.Within setMirror<- setMirror<-.default
-> ###   setMirror<-.how setMirror<-.Plots setMirror<-.Within setConstant<-
+> ### Aliases: set-methods setBlocks<-.default setBlocks<-.how
+> ###   setWithin<-.default setWithin<-.how setStrata<-.default
+> ###   setStrata<-.how setStrata<-.Plots setType<-.default setType<-.how
+> ###   setType<-.Plots setType<-.Within setMirror<-.default setMirror<-.how
+> ###   setMirror<-.Plots setMirror<-.Within setSymmetric<-.default
+> ###   setSymmetric<-.how setSymmetric<-.Plots setSymmetric<-.Within
 > ###   setConstant<-.default setConstant<-.how setConstant<-.Plots
-> ###   setConstant<-.Within setPlots<- setPlots<-.default setPlots<-.how
-> ###   setRow<- setRow<-.default setRow<-.how setRow<-.Plots setRow<-.Within
-> ###   setCol<- setCol<-.default setCol<-.how setCol<-.Plots setCol<-.Within
-> ###   setDim<- setDim<-.default setDim<-.how setDim<-.Plots setDim<-.Within
-> ###   setNperm<- setNperm<-.default setNperm<-.how setNperm<-.permControl
-> ###   setAllperms<- setAllperms<-.default setAllperms<-.how
-> ###   setAllperms<-.permControl setMaxperm<- setMaxperm<-.default
-> ###   setMaxperm<-.how setMaxperm<-.permControl setMinperm<-
-> ###   setMinperm<-.default setMinperm<-.how setMinperm<-.permControl
-> ###   setComplete<- setComplete<-.default setComplete<-.how
-> ###   setComplete<-.permControl setMake<- setMake<-.default setMake<-.how
-> ###   setObserved<- setObserved<-.default setObserved<-.how
+> ###   setConstant<-.Within setPlots<-.default setPlots<-.how
+> ###   setRow<-.default setRow<-.how setRow<-.Plots setRow<-.Within
+> ###   setCol<-.default setCol<-.how setCol<-.Plots setCol<-.Within
+> ###   setDim<-.default setDim<-.how setDim<-.Plots setDim<-.Within
+> ###   setNperm<-.default setNperm<-.how setAllperms<-.default
+> ###   setAllperms<-.how setMaxperm<-.default setMaxperm<-.how
+> ###   setMinperm<-.default setMinperm<-.how setComplete<-.default
+> ###   setComplete<-.how setMake<-.default setMake<-.how
+> ###   setObserved<-.default setObserved<-.how setBlocks<- setPlots<-
+> ###   setWithin<- setStrata<- setNperm<- setAllperms<- setMaxperm<-
+> ###   setMinperm<- setComplete<- setMake<- setObserved<- setRow<- setCol<-
+> ###   setDim<- setType<- setMirror<- setSymmetric<- setConstant<-
 > ### Keywords: methods utils
 > 
 > ### ** Examples
 > 
-> ## extract components from a "how" object
 > hh <- how()
 > getNperm(hh)
 [1] 199
@@ -767,9 +926,9 @@ Permutation details:
 > 
 > ### Name: shuffle-utils
 > ### Title: Utility functions for unrestricted and restricted permutations
-> ### Aliases: shuffle-utils shuffleFree shuffleGrid shuffleSeries
+> ### Aliases: shuffle-utils shuffleFree shuffleSeries shuffleGrid
 > ###   shuffleStrata
-> ### Keywords: htest design
+> ### Keywords: design htest
 > 
 > ### ** Examples
 > 
@@ -801,6 +960,9 @@ Permutation details:
 [1] 3 1 2 6 4 5 9 7 8
 > shuffleGrid(3, 3, flip = rep(TRUE, 2)) ## random start, forced mirror
 [1] 8 9 7 2 3 1 5 6 4
+> shuffleGrid(3, 3, mirror = TRUE,
++             symmetric = TRUE)          ## never mirror both directions
+[1] 9 7 8 3 1 2 6 4 5
 > 
 > 
 > 
@@ -812,10 +974,11 @@ Permutation details:
 > 
 > ### Name: shuffle
 > ### Title: Unrestricted and restricted permutations
-> ### Aliases: shuffle permute
-> ### Keywords: htest design
+> ### Aliases: shuffle permute permutator
+> ### Keywords: design htest
 > 
 > ### ** Examples
+> 
 > 
 > ## Don't show: 
 > suppressWarnings(RNGversion("3.5.0"))
@@ -916,16 +1079,26 @@ Permutation details:
 > CTRL <- how(plots = Plots(gl(4, 5), type = "series"),
 +             within = Within(type = "free"))
 > shuffle(20, CTRL)
- [1] 12 11 13 14 15 16 20 19 17 18  1  2  3  4  5  6  8 10  7  9
+ [1] 10  7  6  9  8 15 12 11 13 14 16 19 20 18 17  3  2  1  5  4
 > 
 > ## permuting within blocks
 > grp <- gl(2, 10) # 2 groups of 10 samples each
 > CTRL <- how(blocks = grp)
 > shuffle(length(grp), control = CTRL)
- [1]  1  3  6 10  4  2  7  8  9  5 12 14 11 15 18 17 16 19 20 13
+ [1]  6  3  1  9  5  8  7 10  4  2 14 12 19 20 11 17 16 13 15 18
+> 
+> ## Reuse a generated permutation set
+> perm_set <- shuffleSet(6, nset = 3, check = FALSE)
+> permute(2, perms = perm_set)
+[1] 6 5 4 2 1 3
+> nextPerm <- permutator(perms = perm_set)
+> nextPerm()
+[1] 6 5 2 1 4 3
+> nextPerm()
+[1] 6 5 4 2 1 3
 > 
 > ## Simple function using permute() to assess significance
-> ## of a t.test  
+> ## of a t.test
 > pt.test <- function(x, group, control) {
 +     ## function to calculate t
 +     t.statistic <- function(x, y) {
@@ -939,26 +1112,27 @@ Permutation details:
 +         pooled <- sqrt(((m-1)*xvar + (n-1)*yvar) / (m+n-2))
 +         (xbar - ybar) / (pooled * sqrt(1/m + 1/n))
 +     }
-+     ## check the control object
-+     #control <- check(x, control)$control ## FIXME
 +     ## number of observations
 +     Nobs <- nobs(x)
 +     ## group names
 +     lev <- names(table(group))
++     ## generate and retain the permutations once
++     nextPerm <- permutator(Nobs, control = control)
++     nperm <- attr(nextPerm, "nperm")
 +     ## vector to hold results, +1 because of observed t
-+     t.permu <- numeric(length = control$nperm) + 1
++     t.permu <- numeric(length = nperm + 1L)
 +     ## calculate observed t
 +     t.permu[1] <- t.statistic(x[group == lev[1]], x[group == lev[2]])
 +     ## generate randomisation distribution of t
-+     for(i in seq_along(t.permu)) {
++     for(i in seq_len(nperm)) {
 +         ## return a permutation
-+         want <- permute(i, Nobs, control)
++         want <- nextPerm()
 +         ## calculate permuted t
 +         t.permu[i+1] <- t.statistic(x[want][group == lev[1]],
 +                                     x[want][group == lev[2]])
 +     }
 +     ## pval from permutation test
-+     pval <- sum(abs(t.permu) >= abs(t.permu[1])) / (control$nperm + 1)
++     pval <- sum(abs(t.permu) >= abs(t.permu[1])) / (nperm + 1L)
 +     ## return value
 +     return(list(t.stat = t.permu[1], pval = pval))
 + }
@@ -999,6 +1173,7 @@ mean in group Group 1 mean in group Group 2
 > 
 > 
 > 
+> 
 > cleanEx()
 > nameEx("shuffleSet")
 > ### * shuffleSet
@@ -1006,11 +1181,12 @@ mean in group Group 1 mean in group Group 2
 > flush(stderr()); flush(stdout())
 > 
 > ### Name: shuffleSet
-> ### Title: Generate a set of permutations from the specified design.
+> ### Title: Generate a set of permutations from the specified design
 > ### Aliases: shuffleSet as.matrix.permutationMatrix
-> ### Keywords: htest design
+> ### Keywords: design htest
 > 
 > ### ** Examples
+> 
 > 
 > ## Don't show: 
 > suppressWarnings(RNGversion("3.5.0"))
@@ -1168,12 +1344,13 @@ p4 5 1 2 3 4 10  6  7  8  9 15 11 12 13 14 20 16 17 18 19
 > 
 > 
 > 
+> 
 > ### * <FOOTER>
 > ###
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  0.621 0.046 0.689 0 0 
+Time elapsed:  0.692 0.067 0.786 0 0
 > grDevices::dev.off()
 null device 
           1 

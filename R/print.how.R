@@ -1,3 +1,5 @@
+#' @export
+#' @noRd
 `print.how` <- function(x, ...) {
 
     ## only for objects of correct class
@@ -34,10 +36,23 @@
                            prefix = pfix))
         writeLines(strwrap(paste("Permutation type:", ptype),
                            prefix = pfix))
-        mirrorP <- getMirror(x, which = "plots")
-        writeLines(strwrap(paste("Mirrored?:", if(mirrorP) "Yes" else "No"),
-                           prefix = pfix))
-        if(isTRUE(all.equal(ptype, "grid"))) {
+        if (ptype == "partition") {
+            sizes <- as.integer(table(plotStr))
+            txt <- paste("Group sizes:", paste(sizes, collapse = ", "))
+            writeLines(strwrap(txt, prefix = pfix))
+            writeLines(strwrap("Within-group order retained", prefix = pfix))
+        }
+        if (ptype != "partition") {
+            mirrorP <- getMirror(x, which = "plots")
+            writeLines(strwrap(paste("Mirrored?:",
+                                     if(mirrorP) "Yes" else "No"),
+                               prefix = pfix))
+        }
+        if(ptype == "grid") {
+            symmetricP <- getSymmetric(x, which = "plots")
+            writeLines(strwrap(paste("Symmetric?:",
+                                     if(symmetricP) "Yes" else "No"),
+                               prefix = pfix))
             nr <- getRow(x, which = "plots")
             nr.t <- if(nr > 1) "rows" else "row"
             nc <- getCol(x, which = "plots")
@@ -63,7 +78,11 @@
         writeLines(strwrap(paste(txt, if(constantW) "No" else "Yes"),
                            prefix = pfix))
     }
-    if(isTRUE(all.equal(wtype, "grid"))) {
+    if(wtype == "grid") {
+        symmetricW <- getSymmetric(x, which = "within")
+        writeLines(strwrap(paste("Symmetric?:",
+                                 if(symmetricW) "Yes" else "No"),
+                           prefix = pfix))
         nr <- getRow(x, which = "within")
         nr.t <- if(nr > 1) "rows" else "row"
         nc <- getCol(x, which = "within")
